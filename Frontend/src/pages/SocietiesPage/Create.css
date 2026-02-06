@@ -1,0 +1,97 @@
+.create-society-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+    background-color: #0f0f0f;
+    min-height: 80vh;
+}
+
+.create-card {
+    background: #1a1a1a;
+    padding: 40px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 600px;
+    border: 1px solid #333;
+}
+
+.create-card h2 {
+    color: white;
+    margin-bottom: 8px;
+}
+
+.create-card p {
+    color: #888;
+    margin-bottom: 30px;
+    font-size: 0.9rem;
+}
+
+.create-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    color: #ccc;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.create-form input,
+.create-form textarea,
+.create-form select {
+    background: #222;
+    border: 1px solid #444;
+    padding: 12px;
+    border-radius: 6px;
+    color: white;
+    font-size: 1rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.color-picker {
+    height: 50px;
+    padding: 5px !important;
+    cursor: pointer;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.cancel-btn {
+    background: transparent;
+    color: #888;
+    border: none;
+    cursor: pointer;
+}
+
+.submit-btn {
+    background: #2ecc71;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.submit-btn:hover {
+    background: #27ae60;
+}

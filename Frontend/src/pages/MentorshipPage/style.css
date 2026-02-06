@@ -1,0 +1,290 @@
+/* =========================================
+   1. LAYOUT & SPACING
+   ========================================= */
+.mentorship-page {
+    background: #020617;
+    min-height: 100vh;
+    padding: 60px 10%;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    /* Added flex center for hero alignment */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.mentorship-hero {
+    margin-bottom: 60px;
+    text-align: center;
+    /* Center the text */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    /* Adds space between the 3 lines */
+}
+
+/* Specific styling for the 3 lines to remove congestion */
+.mentorship-hero h2 {
+    font-size: 1.2rem;
+    color: #6366f1;
+    margin: 0;
+    letter-spacing: 2px;
+}
+
+.mentorship-hero h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin: 10px 0;
+    letter-spacing: -1px;
+}
+
+.moderation-notice {
+    color: #94a3b8;
+    font-size: 0.95rem;
+    max-width: 500px;
+    line-height: 1.5;
+}
+
+.mentor-search-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin-bottom: 40px;
+    width: 100%;
+    /* Ensure search takes full width of container */
+    max-width: 800px;
+}
+
+/* =========================================
+   2. SEARCH & FILTERS
+   ========================================= */
+.search-row {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.search-box {
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    padding: 14px 20px;
+    border-radius: 12px;
+    color: white;
+    flex: 1;
+    transition: all 0.3s ease;
+}
+
+.search-box:focus {
+    border-color: #6366f1;
+    background: #1e293b;
+    outline: none;
+}
+
+.mentor-filters {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.filter-btn {
+    background: transparent;
+    border: 1px solid #334155;
+    color: #94a3b8;
+    padding: 8px 20px;
+    border-radius: 100px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: 0.3s ease;
+}
+
+.filter-btn:hover {
+    color: white;
+    border-color: #6366f1;
+}
+
+.filter-btn.active {
+    background: #6366f1;
+    color: white;
+    border-color: #6366f1;
+}
+
+/* =========================================
+   3. QUESTION CARDS
+   ========================================= */
+.questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    width: 100%;
+    max-width: 800px;
+}
+
+.question-card {
+    background: #0b1224;
+    border: 1px solid #1e293b;
+    border-radius: 20px;
+    padding: 35px;
+    /* Increased padding */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.question-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.solved-card {
+    border-color: #059669;
+    opacity: 0.9;
+}
+
+/* Status Tags */
+.status-tag {
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    display: inline-block;
+}
+
+.pending {
+    background: rgba(234, 179, 8, 0.1);
+    color: #eab308;
+}
+
+.unsolved {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.solved {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+/* =========================================
+   4. ANSWERS & GUIDANCE
+   ========================================= */
+.answers-container {
+    margin: 25px 0;
+    padding-left: 15px;
+    border-left: 2px solid #1e293b;
+}
+
+.guidance-label {
+    font-size: 0.8rem;
+    color: #6366f1;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.answer-bubble {
+    background: #0f172a;
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.senior-name-tag {
+    display: block;
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-top: 8px;
+    font-weight: 600;
+}
+
+/* =========================================
+   5. BUTTONS (Clean & Matte)
+   ========================================= */
+.action-btn {
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border: none;
+    transition: 0.2s;
+    box-shadow: none !important;
+    /* Force matte look */
+}
+
+.ask-btn,
+.answer-btn {
+    background: #6366f1;
+    color: white;
+}
+
+.success-btn {
+    background: #10b981;
+    color: white;
+}
+
+.solve-confirm-btn {
+    background: #059669;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    box-shadow: none;
+}
+
+/* =========================================
+   6. ASK QUESTION MODAL ALIGNMENT FIX
+   ========================================= */
+.modal-form {
+    background: #0b1224;
+    padding: 40px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 600px;
+}
+
+.modal-form h2 {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* Group container to fix Title and Tag alignment */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 25px;
+    /* Spacing between input blocks */
+}
+
+.form-group label {
+    font-size: 0.85rem;
+    color: #818cf8;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.modal-input,
+.modal-textarea {
+    width: 100%;
+    background: #020617;
+    border: 1px solid #1e293b;
+    padding: 15px;
+    border-radius: 10px;
+    color: white;
+    font-size: 1rem;
+}
+
+.modal-textarea {
+    min-height: 150px;
+    resize: none;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 10px;
+}

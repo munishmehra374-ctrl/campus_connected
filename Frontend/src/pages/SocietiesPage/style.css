@@ -1,0 +1,191 @@
+/* --- PAGE CONTAINER --- */
+.societies-page {
+    min-height: 100vh;
+    background: radial-gradient(circle at top, #0b1220, #020617);
+    color: white;
+    padding-bottom: 50px;
+}
+
+/* --- HERO SECTION --- */
+.societies-hero {
+    text-align: center;
+    padding: 80px 20px 40px;
+}
+
+.hero-header-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.badge {
+    background: #1e293b;
+    padding: 6px 14px;
+    border-radius: 20px;
+    color: #8b5cf6;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* --- ADMIN CREATE BUTTON --- */
+.create-society-btn {
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.create-society-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+}
+
+/* --- SECTION HEADER --- */
+.list-header {
+    max-width: 1200px;
+    margin: 40px auto 20px;
+    padding: 0 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.list-header h2 {
+    font-size: 24px;
+    border-left: 4px solid #8b5cf6;
+    padding-left: 15px;
+}
+
+.count-badge {
+    background: rgba(139, 92, 246, 0.1);
+    color: #a78bfa;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+/* --- SOCIETY GRID & CARDS --- */
+.society-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 60px;
+}
+
+.society-card {
+    background: #020617;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid #1e293b;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.society-card:hover {
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.25);
+    border-color: #334155;
+}
+
+/* TOP COLOR STRIP (Randomized in Component) */
+.society-banner {
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 36px;
+    background: #1e293b;
+    /* Fallback */
+}
+
+/* CARD CONTENT */
+.society-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.society-body h3 {
+    margin: 0 0 5px 0;
+    font-size: 20px;
+}
+
+.tagline {
+    color: #60a5fa;
+    font-size: 14px;
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+.society-body p {
+    color: #94a3b8;
+    font-size: 14px;
+    line-height: 1.5;
+    flex-grow: 1;
+}
+
+/* META INFO */
+.society-meta {
+    display: flex;
+    justify-content: space-between;
+    margin: 15px 0;
+    color: #cbd5e1;
+    font-size: 13px;
+    border-top: 1px solid #1e293b;
+    padding-top: 15px;
+}
+
+/* CARD BUTTON (JOIN/VIEW) */
+.view-btn {
+    width: 100%;
+    margin-top: auto;
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    border: none;
+    color: white;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.view-btn:hover {
+    filter: brightness(1.1);
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
+}
+
+/* --- LOADER --- */
+.loader {
+    text-align: center;
+    padding: 100px 0;
+    color: #64748b;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(139, 92, 246, 0.1);
+    border-left-color: #8b5cf6;
+    border-radius: 50%;
+    margin: 0 auto 15px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

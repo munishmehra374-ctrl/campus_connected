@@ -1,0 +1,436 @@
+.resources-page {
+    background-color: #050914;
+    color: #ffffff;
+    padding: 40px 80px;
+    min-height: 100vh;
+}
+
+/* HERO */
+.resources-hero {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.badge {
+    display: inline-block;
+    background: rgba(124, 124, 255, 0.15);
+    color: #7c7cff;
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.resources-hero h1 {
+    font-size: 2.8rem;
+    margin: 16px 0 10px;
+}
+
+.resources-hero p {
+    max-width: 700px;
+    margin: auto;
+    color: #9ca3af;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* FILTERS */
+.resources-filters {
+    background: #0b1224;
+    border: 1px solid #1f2937;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.resources-filters input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid #1f2937;
+    background: #020617;
+    color: white;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+}
+
+.resources-filters input::placeholder {
+    color: #6b7280;
+}
+
+/* Tabs */
+.filter-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.filter-tabs button {
+    padding: 6px 16px;
+    border-radius: 999px;
+    border: none;
+    background: #0f172a;
+    color: #cbd5e1;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.filter-tabs .active {
+    background: #7c7cff;
+    color: #050914;
+}
+
+/* Semester */
+.semester-filter span {
+    font-size: 0.8rem;
+    color: #9ca3af;
+}
+
+.sem-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.sem-buttons button {
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: none;
+    background: #0f172a;
+    color: #cbd5e1;
+    cursor: pointer;
+    font-size: 0.75rem;
+}
+
+.sem-buttons .active {
+    background: #7c7cff;
+    color: #050914;
+}
+
+/* COUNT */
+.count {
+    margin: 20px 0;
+    color: #9ca3af;
+    font-size: 0.85rem;
+}
+
+/* GRID */
+.resource-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+/* CARD */
+.resource-card {
+    background: #0b1224;
+    border: 1px solid #1f2937;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.resource-card:hover {
+    transform: translateY(-4px);
+    border-color: #7c7cff;
+    box-shadow: 0 10px 25px rgba(124, 124, 255, 0.15);
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.tag {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.tag.notes {
+    background: rgba(124, 124, 255, 0.15);
+    color: #7c7cff;
+}
+
+.tag.paper {
+    background: rgba(255, 165, 0, 0.15);
+    color: orange;
+}
+
+.sem {
+    background: #0f172a;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    color: #cbd5e1;
+}
+
+.resource-card h3 {
+    font-size: 0.95rem;
+    margin: 8px 0 4px;
+}
+
+.subject {
+    color: #7c7cff;
+    font-size: 0.8rem;
+}
+
+.meta,
+.stats {
+    display: flex;
+    justify-content: space-between;
+    color: #9ca3af;
+    font-size: 0.75rem;
+    margin-top: 10px;
+}
+
+/* BUTTON */
+.download-btn {
+    margin-top: auto;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #1f2937;
+    background: #020617;
+    color: white;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.download-btn:hover {
+    border-color: #7c7cff;
+    background: #0f172a;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1000px) {
+    .resource-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .resource-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .resources-page {
+        padding: 20px;
+    }
+}
+
+/* ========================= */
+/* UPLOAD BUTTON (Filters) */
+/* ========================= */
+
+.upload-btn {
+    margin-bottom: 14px;
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: none;
+    background: #22c55e;
+    color: #050914;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.upload-btn:hover {
+    background: #16a34a;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(34, 197, 94, 0.3);
+}
+
+/* ========================= */
+/* UPLOAD RESOURCE SECTION */
+/* ========================= */
+
+.upload-section {
+    background: #0b1224;
+    border: 1px solid #1f2937;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.upload-section h3 {
+    grid-column: span 2;
+    font-size: 1rem;
+    color: #7c7cff;
+}
+
+.upload-section input,
+.upload-section select {
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #1f2937;
+    background: #020617;
+    color: white;
+    font-size: 0.8rem;
+}
+
+.upload-section input::placeholder {
+    color: #6b7280;
+}
+
+.upload-section button {
+    grid-column: span 2;
+    padding: 10px;
+    border-radius: 12px;
+    border: none;
+    background: #7c7cff;
+    color: #050914;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.upload-section button:hover {
+    background: #6366f1;
+    transform: translateY(-1px);
+}
+
+/* ========================= */
+/* ADMIN VERIFY PANEL */
+/* ========================= */
+
+.admin-panel {
+    background: #0b1224;
+    border: 1px dashed #7c7cff;
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 30px;
+}
+
+.admin-panel h3 {
+    font-size: 1rem;
+    color: #7c7cff;
+    margin-bottom: 6px;
+}
+
+.admin-panel p {
+    font-size: 0.8rem;
+    color: #9ca3af;
+}
+
+/* ========================= */
+/* APPROVE BUTTON (Card) */
+/* ========================= */
+
+.approve-btn {
+    margin-top: 10px;
+    padding: 8px;
+    border-radius: 10px;
+    border: none;
+    background: #22c55e;
+    color: #050914;
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.approve-btn:hover {
+    background: #16a34a;
+    transform: translateY(-1px);
+}
+
+/* ========================= */
+/* DISABLED / STATUS UI */
+/* ========================= */
+
+.resource-card.pending {
+    opacity: 0.6;
+    border-style: dashed;
+}
+
+/* ========================= */
+/* CURSOR & UX IMPROVEMENTS */
+/* ========================= */
+
+.filter-tabs button,
+.sem-buttons button,
+.download-btn,
+.upload-btn,
+.approve-btn {
+    cursor: pointer;
+}
+
+.filter-tabs button:active,
+.sem-buttons button:active {
+    transform: scale(0.95);
+}
+
+/* PENDING LABEL */
+.pending-label {
+    margin-left: 8px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #ff9800;
+    background: rgba(255, 152, 0, 0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 152, 0, 0.3);
+}
+
+/* PENDING CARD STATE */
+.resource-card.pending-view {
+    border: 1px dashed #ff9800;
+    /* Distinct border for unverified items */
+    background: rgba(11, 18, 36, 0.8);
+}
+
+.resource-card.pending-view:hover {
+    border-color: #ffb74d;
+    box-shadow: 0 10px 25px rgba(255, 152, 0, 0.1);
+}
+
+.card-top-left {
+    display: flex;
+    align-items: center;
+}
+
+/* Ensure the actions container stacks buttons nicely */
+.actions {
+    margin-top: 15px;
+    width: 100%;
+}
+
+.approve-btn {
+    width: 100%;
+    font-weight: 600;
+}
+
+/* Badges */
+.badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-left: 8px;
+  text-transform: uppercase;
+}
+
+.badge-pending {
+  background-color: #fff9db;
+  color: #f08c00;
+  border: 1px solid #ffe066;
+}
+
+.badge-success {
+  background-color: #ebfbee;
+  color: #2b8a3e;
+  border: 1px solid #b2f2bb;
+}
+
+/* Card Visual Feedback */
+.status-pending { border-left: 4px solid #fab005; }
+.status-approved { border-left: 4px solid #40c057; }

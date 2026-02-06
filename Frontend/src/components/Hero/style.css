@@ -1,0 +1,123 @@
+.hero {
+    width: 100%;
+    min-height: 80vh;
+
+    /* Background image */
+    background-image: url("../../assets/hero-bg.jpeg");
+    /* change path if needed */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    color: #ffffff;
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+    padding: 0 20px;
+}
+
+/* Dark overlay for readability */
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(28, 20, 10, 0.75);
+    /* same as your bg but transparent */
+}
+
+/* Keep content above overlay */
+.hero>* {
+    position: relative;
+    z-index: 1;
+}
+
+/* Main heading */
+.hero h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+/* Highlighted text */
+.hero h1 span {
+    color: #7c7cff;
+}
+
+/* Subtitle */
+.hero p {
+    max-width: 700px;
+    font-size: 1.1rem;
+    color: #cbd5e1;
+    margin-bottom: 40px;
+    line-height: 1.6;
+}
+
+/* Buttons container */
+.hero-buttons {
+    display: flex;
+    gap: 20px;
+}
+
+/* Primary button */
+.primary-btn {
+    background: linear-gradient(135deg, #6a5cff, #c77dff);
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.primary-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(124, 124, 255, 0.4);
+}
+
+/* Secondary button */
+.secondary-btn {
+    background-color: transparent;
+    color: #ffffff;
+    border: 1px solid #7c7cff;
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.secondary-btn:hover {
+    background-color: #7c7cff;
+    color: #0a0f1c;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+        width: 80%;
+    }
+}

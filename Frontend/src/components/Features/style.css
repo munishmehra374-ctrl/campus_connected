@@ -1,0 +1,83 @@
+.features {
+    padding: 100px 60px;
+    text-align: center;
+    background: radial-gradient(circle at top, #0b1220, #020617);
+    color: white;
+}
+
+.features h2 {
+    font-size: 2.4rem;
+    margin-bottom: 50px;
+}
+
+/* GRID: 3 per row */
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    max-width: 1200px;
+    /* wider grid */
+    margin: 0 auto;
+}
+
+/* CARD */
+.feature-card {
+    background: #020617;
+    border: 1px solid #1e293b;
+    border-radius: 20px;
+    padding: 40px 24px;
+    /* more space inside */
+    min-height: 220px;
+    /* taller cards */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* center content */
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(139, 92, 246, 0.3);
+}
+
+/* TITLE */
+.feature-card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+}
+
+/* BUTTON */
+.feature-btn {
+    margin-top: auto;
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    border: none;
+    color: white;
+    padding: 12px 28px;
+    border-radius: 999px;
+    font-size: 15px;
+    cursor: pointer;
+    pointer-events: none;
+    /* whole card handles click */
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.feature-card:hover .feature-btn {
+    box-shadow: 0 0 18px rgba(168, 85, 247, 0.7);
+    transform: scale(1.05);
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .feature-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+}

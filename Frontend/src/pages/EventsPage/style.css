@@ -1,0 +1,291 @@
+/* --- PAGE LAYOUT --- */
+.events-page {
+    min-height: 100vh;
+    background: radial-gradient(circle at top, #0b1220, #020617);
+    color: white;
+    padding-bottom: 120px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- HERO SECTION --- */
+.events-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 100px 20px 50px;
+}
+
+.events-hero h1 {
+    font-size: 3.2rem;
+    margin: 20px 0;
+    background: linear-gradient(to right, #fff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Specific Badge for the Hero Area */
+.badge-head {
+    background: rgba(139, 92, 246, 0.1);
+    color: #a78bfa;
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    margin-bottom: 10px;
+}
+
+/* --- HOST NEW EVENT BUTTON --- */
+.create-btn {
+    margin-top: 35px;
+    /* Pushes button down */
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    color: white;
+    padding: 14px 32px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.create-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(168, 85, 247, 0.4);
+    filter: brightness(1.1);
+}
+
+/* --- FILTERS --- */
+.event-filters {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 0 auto 60px;
+    padding: 0 60px;
+    width: 100%;
+    max-width: 1600px;
+}
+
+.event-filters button {
+    flex: 1;
+    max-width: 220px;
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    color: #94a3b8;
+    padding: 14px 0;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.event-filters button.active {
+    background: #6366f1;
+    color: white;
+    border-color: #818cf8;
+}
+
+/* --- 4 COLUMN GRID --- */
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+    padding: 0 60px;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* --- EVENT CARD --- */
+.event-card {
+    background: linear-gradient(180deg, #0f172a, #050b1f);
+    border-radius: 24px;
+    border: 1px solid #1e293b;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.event-card:hover {
+    transform: translateY(-10px);
+    border-color: #6366f1;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* --- PROGRESS & VACANCY --- */
+.event-progress {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    font-size: 0.8rem;
+    color: #cbd5f5;
+}
+
+.progress-bar {
+    height: 8px;
+    background: #1e293b;
+    border-radius: 999px;
+    overflow: hidden;
+    margin: 8px 0 20px;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.6s ease-in-out;
+}
+
+/* --- CARD BUTTONS & BADGES --- */
+.badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 999px;
+    text-transform: uppercase;
+}
+
+.workshop {
+    background: rgba(99, 102, 241, 0.15);
+    color: #a5b4fc;
+}
+
+.hackathon {
+    background: rgba(236, 72, 153, 0.15);
+    color: #f9a8d4;
+}
+
+.rsvp-btn,
+.delete-btn {
+    margin-top: auto;
+    padding: 14px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: 0.3s;
+}
+
+.rsvp-btn {
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    color: white;
+}
+
+.delete-btn {
+    background: rgba(239, 68, 68, 0.1);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.5);
+}
+
+/* --- COMPACT MODAL SYSTEM --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(2, 6, 23, 0.8);
+    backdrop-filter: blur(6px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 15px;
+}
+
+.modal-form {
+    background: linear-gradient(180deg, #0f172a, #050b1f);
+    width: 100%;
+    max-width: 420px;
+    /* Thinner, compact width */
+    padding: 25px 30px;
+    border-radius: 20px;
+    border: 1px solid #1e293b;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    /* Tighter vertical spacing */
+    animation: modalSlideUp 0.3s ease-out;
+}
+
+@keyframes modalSlideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-form h2 {
+    font-size: 1.4rem;
+    margin-bottom: 5px;
+    background: linear-gradient(to right, #fff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+}
+
+.modal-form input,
+.modal-form select,
+.modal-form textarea {
+    background: #020617;
+    border: 1px solid #1e293b;
+    color: white;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.modal-form input:focus,
+.modal-form select:focus,
+.modal-form textarea:focus {
+    border-color: #6366f1;
+}
+
+.modal-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* Buttons side-by-side to save height */
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.submit-btn {
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.cancel-btn {
+    background: rgba(255, 255, 255, 0.05);
+    color: #94a3b8;
+    border: 1px solid #1e293b;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.cancel-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #f87171;
+}
