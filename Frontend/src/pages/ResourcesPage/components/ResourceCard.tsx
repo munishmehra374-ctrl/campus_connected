@@ -40,17 +40,33 @@ const ResourceCard = ({ resource, role }: Props) => {
     }
   };
 
+  // --- NEW DELETE HANDLER ---
+const handleDelete = async () => {
+    if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
+      try {
+        await axios.delete(`http://localhost:5000/api/resources/${_id}`, { 
+          withCredentials: true 
+        });
+        
+        // No alert here! It just refreshes immediately.
+        window.location.reload(); 
+      } catch (err) {
+        console.error(err);
+        alert("Failed to delete."); // Only show alert if something goes wrong
+      }
+    }
+  };
+
   return (
     <div className={`resource-card ${isPending ? "status-pending" : "status-approved"}`}>
       <div className="card-top">
         <div className="card-top-left">
           <span className={`tag ${type?.toLowerCase()}`}>{type}</span>
-          
-          {/* ✅ DYNAMIC LABELS */}
+
           {isPending && (isAdmin || isSenior) && (
             <span className="badge badge-pending">🕒 Pending Verification</span>
           )}
-          
+
           {isApproved && (
             <span className="badge badge-success">✅ Success / Approved</span>
           )}
@@ -74,17 +90,24 @@ const ResourceCard = ({ resource, role }: Props) => {
         </div>
 
         <div className="actions">
-          {/* ✅ Admin Only Button */}
+          {/* ✅ Admin Only Approve Button */}
           {isAdmin && isPending && (
             <button className="approve-btn" onClick={handleApprove}>
               Verify & Approve
             </button>
           )}
 
-          {/* ✅ Download Visibility: Show if approved, OR if Senior/Admin is checking it */}
+          {/* ✅ Admin (or Senior) Delete Button */}
+          {(isAdmin) && (
+            <button className="delete-btn" onClick={handleDelete} title="Delete Resource">
+              🗑️ Delete
+            </button>
+          )}
+
+          {/* ✅ Download Visibility */}
           {(isApproved || isSenior || isAdmin) && fileUrl && (
-            <a href={`http://localhost:5000${fileUrl}`} target="_blank" className="download-btn">
-              Download Resource
+            <a href={`http://localhost:5000${fileUrl}`} target="_blank" className="download-btn" rel="noreferrer">
+              Download
             </a>
           )}
         </div>
