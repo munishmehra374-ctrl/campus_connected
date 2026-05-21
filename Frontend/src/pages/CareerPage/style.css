@@ -297,3 +297,30 @@
 .career-card:hover .view-more {
     color: #c4b5fd;
 }
+
+@media (max-width: 900px) {
+    .career-header h1 {
+        font-size: 2.4rem;
+    }
+
+    .career-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        padding: 32px 4%;
+        gap: 24px;
+    }
+}
+
+@media (max-width: 600px) {
+    .career-header {
+        padding: 48px 16px;
+    }
+
+    .career-header h1 {
+        font-size: 2rem;
+    }
+
+    .career-grid {
+        grid-template-columns: 1fr;
+        padding: 24px 16px;
+    }
+}

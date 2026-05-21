@@ -189,3 +189,31 @@
         transform: rotate(360deg);
     }
 }
+
+@media (max-width: 900px) {
+    .list-header {
+        padding: 0 24px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .society-grid {
+        padding: 20px 24px;
+    }
+}
+
+@media (max-width: 600px) {
+    .societies-hero {
+        padding: 56px 16px 32px;
+    }
+
+    .list-header {
+        padding: 0 16px;
+        margin: 28px auto 16px;
+    }
+
+    .society-grid {
+        padding: 16px;
+        grid-template-columns: 1fr;
+    }
+}

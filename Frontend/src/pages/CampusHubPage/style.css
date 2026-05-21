@@ -771,6 +771,18 @@
 .hub-close-full { width: 100%; margin-top: 16px; }
 
 @media (max-width: 768px) {
+    .campus-hub-page {
+        padding: 64px 16px 72px;
+    }
+
+    .hub-toolbar {
+        padding: 0 8px;
+    }
+
+    .hub-hero {
+        padding: 32px 12px 24px;
+    }
+
     .hub-events-grid,
     .hub-events-grid-compact {
         grid-template-columns: 1fr;
@@ -782,5 +794,58 @@
 
     .hub-form-row {
         flex-direction: column;
+    }
+
+    .hub-modal {
+        padding: 22px 18px;
+        max-height: 85vh;
+    }
+
+    .hub-modal-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .hub-modal-actions button {
+        width: 100%;
+    }
+
+    .hub-event-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .hub-event-actions .hub-btn-primary,
+    .hub-event-actions .hub-btn-secondary,
+    .hub-event-actions .hub-btn-danger,
+    .hub-event-actions .hub-btn-ghost {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .campus-hub-page {
+        padding: 56px 12px 64px;
+    }
+
+    .hub-stat {
+        min-width: 0;
+        flex: 1 1 calc(50% - 8px);
+        padding: 12px 14px;
+    }
+
+    .hub-org-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .hub-main-tabs {
+        gap: 6px;
+    }
+
+    .hub-main-tabs button {
+        flex: 1 1 auto;
+        font-size: 0.78rem;
+        padding: 8px 10px;
     }
 }

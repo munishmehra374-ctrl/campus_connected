@@ -121,3 +121,20 @@
         width: 80%;
     }
 }
+
+@media (max-width: 480px) {
+    .hero {
+        min-height: 70vh;
+        padding: 0 16px;
+    }
+
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+        width: 100%;
+        max-width: 280px;
+    }
+}

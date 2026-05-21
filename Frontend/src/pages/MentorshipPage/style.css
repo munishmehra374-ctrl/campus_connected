@@ -1189,3 +1189,16 @@
         width: 100%;
     }
 }
+
+@media (max-width: 600px) {
+    .mentorship-page .mentorship-hero h1 {
+        font-size: 1.85rem;
+    }
+
+    .mentorship-page .modal-overlay .modal-content,
+    .mentorship-page .confirm-modal {
+        width: calc(100vw - 32px);
+        max-width: 100%;
+        margin: 0 16px;
+    }
+}

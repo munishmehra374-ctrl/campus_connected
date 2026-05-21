@@ -160,3 +160,26 @@
     color: #64748b;
     padding: 48px;
 }
+
+@media (max-width: 768px) {
+    .mentor-verify-page {
+        padding: 20px 16px 64px;
+    }
+
+    .mentor-verify-header h1 {
+        font-size: 1.45rem;
+    }
+
+    .mentor-verify-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .mentor-verify-actions {
+        flex-direction: column;
+    }
+
+    .mentor-verify-actions .btn-approve,
+    .mentor-verify-actions .btn-reject {
+        width: 100%;
+    }
+}

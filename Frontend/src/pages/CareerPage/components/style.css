@@ -521,3 +521,68 @@ textarea {
     padding: 4px;
     cursor: pointer;
 }
+
+@media (max-width: 768px) {
+    .details-page-wrapper {
+        padding: 28px 16px;
+    }
+
+    .details-header h1 {
+        font-size: 1.75rem;
+    }
+
+    .details-header {
+        padding-left: 14px;
+    }
+
+    .roadmap-item {
+        padding-left: 18px;
+    }
+
+    .form-row {
+        flex-direction: column;
+    }
+
+    .modal-content {
+        width: 100%;
+        padding: 22px 18px;
+    }
+
+    .modal-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .modal-actions .cancel-btn,
+    .modal-actions .save-btn {
+        width: 100%;
+    }
+
+    .senior-panel {
+        margin-top: 40px;
+        padding: 20px 16px;
+    }
+
+    .resource-card-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .meta-bar {
+        gap: 12px;
+    }
+
+    .roadmap-card {
+        gap: 14px;
+    }
+
+    .step-content:hover {
+        transform: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .details-header h1 {
+        font-size: 1.5rem;
+    }
+}

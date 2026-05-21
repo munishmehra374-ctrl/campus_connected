@@ -818,4 +818,23 @@
   .auth-hero-title {
     font-size: 2rem;
   }
+
+  .auth-senior-success {
+    padding: 28px 20px;
+  }
+
+  .auth-nav-actions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 360px) {
+  .auth-brand span {
+    display: none;
+  }
+
+  .auth-feature-pills span {
+    font-size: 0.72rem;
+  }
 }

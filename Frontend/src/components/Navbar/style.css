@@ -266,4 +266,39 @@
     .user-greeting {
         font-size: 0.9rem;
     }
+
+    .nav-actions {
+        width: 100%;
+        justify-content: center;
+        order: 2;
+        flex-wrap: wrap;
+    }
+
+    .user-nav-container {
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .user-profile-info {
+        align-items: center;
+    }
+
+    .logout-card {
+        width: min(360px, calc(100vw - 32px));
+        padding: 28px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo span {
+        font-size: 0.95rem;
+    }
+
+    .login-btn,
+    .get-started-btn,
+    .logout-trigger-btn {
+        padding: 7px 12px;
+        font-size: 0.8rem;
+    }
 }

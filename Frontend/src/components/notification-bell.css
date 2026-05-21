@@ -125,3 +125,10 @@
     font-size: 0.68rem;
     color: #64748b;
 }
+
+@media (max-width: 600px) {
+    .notif-dropdown {
+        right: -8px;
+        width: min(360px, calc(100vw - 24px));
+    }
+}

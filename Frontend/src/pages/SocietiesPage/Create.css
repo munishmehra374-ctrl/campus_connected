@@ -95,3 +95,27 @@
 .submit-btn:hover {
     background: #27ae60;
 }
+
+@media (max-width: 600px) {
+    .create-society-page {
+        padding: 40px 16px;
+        align-items: flex-start;
+    }
+
+    .create-card {
+        padding: 28px 20px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .form-actions .cancel-btn,
+    .form-actions .submit-btn {
+        width: 100%;
+    }
+}

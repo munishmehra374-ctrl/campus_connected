@@ -59,3 +59,25 @@
     background: rgba(16, 185, 129, 0.2);
     color: #6ee7b7;
 }
+
+@media (max-width: 768px) {
+    .mentor-status-banner {
+        padding: 10px 16px;
+    }
+
+    .mentor-status-banner--admin {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .mentor-status-banner--admin button {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .mentor-status-banner--pending p {
+        font-size: 0.8rem;
+    }
+}

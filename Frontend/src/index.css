@@ -33,6 +33,17 @@ body {
   min-height: 100vh;
 }
 
+html {
+  overflow-x: hidden;
+}
+
+img,
+svg,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
 /* Links */
 a {
   font-weight: 500;
