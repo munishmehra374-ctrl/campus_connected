@@ -1,119 +1,198 @@
-import axios from "axios";
-
-interface Resource {
-  _id: string;
-  type: string;
-  sem: string;
-  title: string;
-  subject: string;
-  author: string;
-  time: string;
-  views: number;
-  downloads: number;
-  status: "pending" | "approved";
-  fileUrl: string;
-}
+import { useState } from "react";
+import api, {
+    approveStudyResource,
+    deleteStudyResource,
+    rejectStudyResource,
+    trackStudyResourceDownload,
+} from "../../../api";
+import type { StudyResource, UploaderRole } from "../data";
+import { formatResourceDate, getUploaderName, roleBadgeLabel } from "../data";
 
 interface Props {
-  resource: Resource;
-  role: string;
+    resource: StudyResource;
+    role: string;
+    userId?: string;
+    onAction: () => void;
 }
 
-const ResourceCard = ({ resource, role }: Props) => {
-  if (!resource) return null;
+const typeClass = (type: string) =>
+    type.toLowerCase().replace(/\s+/g, "-");
 
-  const { _id, title, subject, author, time, views, downloads, status, fileUrl, type, sem } = resource;
+const ResourceCard = ({ resource, role, userId, onAction }: Props) => {
+    const [busy, setBusy] = useState(false);
+    const [localDownloads, setLocalDownloads] = useState(resource.downloadCount ?? 0);
 
-  const userRole = role?.toLowerCase().trim();
-  const isPending = status === "pending";
-  const isApproved = status === "approved";
-  const isAdmin = userRole === "admin";
-  const isSenior = userRole === "senior";
+    if (!resource) return null;
 
-  const handleApprove = async () => {
-    try {
-      await axios.put(`http://localhost:5000/api/resources/${_id}/approve`, {}, { withCredentials: true });
-      alert("Resource successfully verified!");
-      window.location.reload();
-    } catch (err) {
-      alert("Unauthorized action.");
-    }
-  };
+    const {
+        _id,
+        title,
+        subject,
+        status,
+        fileUrl,
+        type,
+        sem,
+        uploaderRole,
+        createdAt,
+    } = resource;
 
-  // --- NEW DELETE HANDLER ---
-const handleDelete = async () => {
-    if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
-      try {
-        await axios.delete(`http://localhost:5000/api/resources/${_id}`, { 
-          withCredentials: true 
-        });
-        
-        // No alert here! It just refreshes immediately.
-        window.location.reload(); 
-      } catch (err) {
-        console.error(err);
-        alert("Failed to delete."); // Only show alert if something goes wrong
-      }
-    }
-  };
+    const userRole = role?.toLowerCase().trim();
+    const isPending = status === "pending";
+    const isApproved = status === "approved";
+    const isAdmin = userRole === "admin";
+    const isSenior = userRole === "senior";
 
-  return (
-    <div className={`resource-card ${isPending ? "status-pending" : "status-approved"}`}>
-      <div className="card-top">
-        <div className="card-top-left">
-          <span className={`tag ${type?.toLowerCase()}`}>{type}</span>
+    const uploaderId =
+        typeof resource.uploadedBy === "object" ? resource.uploadedBy?._id : resource.uploadedBy;
+    const isOwner = userId && uploaderId && userId === uploaderId;
+    const canDelete = isAdmin || isOwner;
+    const canDownload = isApproved || isSenior || isAdmin;
+    const canModerate = isAdmin && isPending;
 
-          {isPending && (isAdmin || isSenior) && (
-            <span className="badge badge-pending">🕒 Pending Verification</span>
-          )}
+    const handleApprove = async () => {
+        setBusy(true);
+        try {
+            await approveStudyResource(_id);
+            onAction();
+        } catch {
+            alert("Could not approve resource.");
+        } finally {
+            setBusy(false);
+        }
+    };
 
-          {isApproved && (
-            <span className="badge badge-success">✅ Success / Approved</span>
-          )}
-        </div>
-        <span className="sem">{sem}</span>
-      </div>
+    const handleReject = async () => {
+        if (!window.confirm(`Reject "${title}"?`)) return;
+        setBusy(true);
+        try {
+            await rejectStudyResource(_id);
+            onAction();
+        } catch {
+            alert("Could not reject resource.");
+        } finally {
+            setBusy(false);
+        }
+    };
 
-      <div className="card-body">
-        <h3>{title}</h3>
-        <p className="subject">{subject}</p>
-        <div className="meta">
-          <span>👤 {author}</span>
-          <span>⏱ {time}</span>
-        </div>
-      </div>
+    const handleDelete = async () => {
+        if (!window.confirm(`Delete "${title}" permanently?`)) return;
+        setBusy(true);
+        try {
+            await deleteStudyResource(_id);
+            onAction();
+        } catch {
+            alert("Failed to delete resource.");
+        } finally {
+            setBusy(false);
+        }
+    };
 
-      <div className="card-footer">
-        <div className="stats">
-          <span>👁 {views}</span>
-          <span>⬇ {downloads}</span>
-        </div>
+    const handleDownload = async () => {
+        if (!fileUrl) return;
+        setBusy(true);
+        try {
+            const res = await trackStudyResourceDownload(_id);
+            setLocalDownloads(res.data.downloadCount);
+            const base = api.defaults.baseURL || "";
+            window.open(`${base}${res.data.fileUrl || fileUrl}`, "_blank", "noopener,noreferrer");
+        } catch {
+            const base = api.defaults.baseURL || "";
+            window.open(`${base}${fileUrl}`, "_blank", "noopener,noreferrer");
+        } finally {
+            setBusy(false);
+        }
+    };
 
-        <div className="actions">
-          {/* ✅ Admin Only Approve Button */}
-          {isAdmin && isPending && (
-            <button className="approve-btn" onClick={handleApprove}>
-              Verify & Approve
-            </button>
-          )}
+    return (
+        <article
+            className={`resource-card ${isPending ? "status-pending" : "status-approved"}`}
+        >
+            <div className="card-top">
+                <div className="card-top-left">
+                    <span className={`tag tag-${typeClass(type)}`}>{type}</span>
+                    {isPending && (isAdmin || isSenior) && (
+                        <span className="badge badge-pending">Pending Approval</span>
+                    )}
+                    {isApproved && (
+                        <span className="badge badge-success">Approved</span>
+                    )}
+                </div>
+                <span className="sem">{sem}</span>
+            </div>
 
-          {/* ✅ Admin (or Senior) Delete Button */}
-          {(isAdmin) && (
-            <button className="delete-btn" onClick={handleDelete} title="Delete Resource">
-              🗑️ Delete
-            </button>
-          )}
+            <div className="card-body">
+                <h3>{title}</h3>
+                <p className="subject">{subject}</p>
+                <div className="meta">
+                    <span className="uploader">Uploaded by {getUploaderName(resource.uploadedBy)}</span>
+                </div>
+                <div className="badge-row">
+                    <span className={`role-badge role-${(uploaderRole || "junior") as UploaderRole}`}>
+                        {roleBadgeLabel((uploaderRole || "junior") as UploaderRole)}
+                    </span>
+                    {createdAt && (
+                        <span className="upload-date">{formatResourceDate(createdAt)}</span>
+                    )}
+                </div>
+            </div>
 
-          {/* ✅ Download Visibility */}
-          {(isApproved || isSenior || isAdmin) && fileUrl && (
-            <a href={`http://localhost:5000${fileUrl}`} target="_blank" className="download-btn" rel="noreferrer">
-              Download
-            </a>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+            <div className="card-footer">
+                <div className="stats">
+                    <span>Downloads: {localDownloads}</span>
+                </div>
+
+                <div className="actions">
+                    {canModerate && (
+                        <>
+                            <button
+                                type="button"
+                                className="approve-btn"
+                                disabled={busy}
+                                onClick={handleApprove}
+                            >
+                                Approve
+                            </button>
+                            <button
+                                type="button"
+                                className="reject-btn"
+                                disabled={busy}
+                                onClick={handleReject}
+                            >
+                                Reject
+                            </button>
+                        </>
+                    )}
+
+                    {canDelete && (
+                        <button
+                            type="button"
+                            className="delete-btn"
+                            disabled={busy}
+                            onClick={handleDelete}
+                            title="Delete resource"
+                        >
+                            Delete
+                        </button>
+                    )}
+
+                    {canDownload && fileUrl && (
+                        <button
+                            type="button"
+                            className="download-btn"
+                            disabled={busy}
+                            onClick={handleDownload}
+                        >
+                            Download
+                        </button>
+                    )}
+
+                    {isPending && !isAdmin && !isSenior && isOwner && (
+                        <span className="pending-owner-note">Awaiting admin approval</span>
+                    )}
+                </div>
+            </div>
+        </article>
+    );
 };
 
 export default ResourceCard;

@@ -1,77 +1,61 @@
 import { useState } from "react";
 import { createEvent } from "../../../api";
 import { useAuth } from "../../../context/AuthContext";
-
-const CATEGORIES = [
-    "Hackathon",
-    "Workshop",
-    "Coding Contest",
-    "Seminar",
-    "Mentor Session",
-    "Competition",
-    "Community Meetup",
-];
+import { EVENT_CATEGORIES } from "../types";
 
 interface Props {
     onClose: () => void;
-    onSuccess?: () => void;
+    onSuccess: () => void;
 }
 
 const CreateEventModal = ({ onClose, onSuccess }: Props) => {
     const { user } = useAuth();
-    const [loading, setLoading] = useState(false);
     const [form, setForm] = useState({
         title: "",
         type: "Workshop",
-        description: "",
-        organizer: user?.name || "",
+        capacity: 50,
         date: "",
         time: "",
         location: "",
+        organizer: user?.name || "",
+        description: "",
         venueMode: "In-Person",
-        capacity: 50,
         registrationDeadline: "",
-        bannerImage: "",
         tags: "",
+        bannerImage: "",
     });
+    const [saving, setSaving] = useState(false);
 
     const submit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true);
+        setSaving(true);
         try {
             await createEvent({
                 ...form,
                 capacity: Number(form.capacity),
-                tags: form.tags.split(",").map((t) => t.trim()).filter(Boolean),
+                tags: form.tags
+                    .split(",")
+                    .map((t) => t.trim())
+                    .filter(Boolean),
             });
-            alert(
-                user?.role === "admin"
-                    ? "Event published successfully."
-                    : "Event submitted for admin approval."
-            );
-            onSuccess?.();
+            onSuccess();
             onClose();
         } catch (err: unknown) {
             const msg =
                 err && typeof err === "object" && "response" in err
                     ? (err as { response?: { data?: { message?: string } } }).response?.data?.message
                     : "Could not create event";
-            alert(msg || "Could not create event");
+            alert(msg);
         } finally {
-            setLoading(false);
+            setSaving(false);
         }
     };
 
     return (
         <div className="hub-modal-overlay" onClick={onClose}>
-            <form className="hub-modal-form" onClick={(e) => e.stopPropagation()} onSubmit={submit}>
-                <span className="hub-modal-badge">Host Event</span>
-                <h2>Create Campus Activity</h2>
-                <p className="hub-modal-hint">
-                    {user?.role === "admin"
-                        ? "Admin events publish immediately."
-                        : "Your event will be reviewed by an admin before going public."}
-                </p>
+            <form className="hub-modal" onClick={(e) => e.stopPropagation()} onSubmit={submit}>
+                <h2>Host Campus Event</h2>
+                <p className="hub-modal-sub">Workshops, hackathons, mentor sessions & campus activities</p>
 
                 <input
                     placeholder="Event title"
@@ -79,10 +63,17 @@ const CreateEventModal = ({ onClose, onSuccess }: Props) => {
                     onChange={(e) => setForm({ ...form, title: e.target.value })}
                     required
                 />
+                <textarea
+                    placeholder="Description"
+                    rows={3}
+                    value={form.description}
+                    onChange={(e) => setForm({ ...form, description: e.target.value })}
+                    required
+                />
 
                 <div className="hub-form-row">
-                    <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} required>
-                        {CATEGORIES.map((c) => (
+                    <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })}>
+                        {EVENT_CATEGORIES.map((c) => (
                             <option key={c} value={c}>
                                 {c}
                             </option>
@@ -98,15 +89,25 @@ const CreateEventModal = ({ onClose, onSuccess }: Props) => {
                     </select>
                 </div>
 
-                <input
-                    placeholder="Organizer name"
-                    value={form.organizer}
-                    onChange={(e) => setForm({ ...form, organizer: e.target.value })}
-                    required
-                />
+                <div className="hub-form-row">
+                    <input
+                        type="number"
+                        min={1}
+                        placeholder="Max slots"
+                        value={form.capacity}
+                        onChange={(e) => setForm({ ...form, capacity: Number(e.target.value) })}
+                        required
+                    />
+                    <input
+                        placeholder="Organizer name"
+                        value={form.organizer}
+                        onChange={(e) => setForm({ ...form, organizer: e.target.value })}
+                        required
+                    />
+                </div>
 
                 <input
-                    placeholder="Venue or meeting link"
+                    placeholder="Venue / Zoom link"
                     value={form.location}
                     onChange={(e) => setForm({ ...form, location: e.target.value })}
                     required
@@ -129,18 +130,14 @@ const CreateEventModal = ({ onClose, onSuccess }: Props) => {
 
                 <div className="hub-form-row">
                     <input
-                        type="number"
-                        min={1}
-                        placeholder="Max participants"
-                        value={form.capacity}
-                        onChange={(e) => setForm({ ...form, capacity: Number(e.target.value) })}
-                        required
-                    />
-                    <input
                         type="datetime-local"
                         value={form.registrationDeadline}
                         onChange={(e) => setForm({ ...form, registrationDeadline: e.target.value })}
-                        title="Registration deadline"
+                    />
+                    <input
+                        placeholder="Tags (comma separated)"
+                        value={form.tags}
+                        onChange={(e) => setForm({ ...form, tags: e.target.value })}
                     />
                 </div>
 
@@ -150,26 +147,12 @@ const CreateEventModal = ({ onClose, onSuccess }: Props) => {
                     onChange={(e) => setForm({ ...form, bannerImage: e.target.value })}
                 />
 
-                <input
-                    placeholder="Tags (comma separated: AI, Web Dev, Placement)"
-                    value={form.tags}
-                    onChange={(e) => setForm({ ...form, tags: e.target.value })}
-                />
-
-                <textarea
-                    placeholder="Describe the event, agenda, and who should join…"
-                    rows={4}
-                    value={form.description}
-                    onChange={(e) => setForm({ ...form, description: e.target.value })}
-                    required
-                />
-
                 <div className="hub-modal-actions">
-                    <button type="button" className="hub-btn ghost" onClick={onClose}>
+                    <button type="button" className="hub-btn-ghost" onClick={onClose}>
                         Cancel
                     </button>
-                    <button type="submit" className="hub-btn primary" disabled={loading}>
-                        {loading ? "Submitting…" : "Submit Event"}
+                    <button type="submit" className="hub-btn-primary" disabled={saving}>
+                        {saving ? "Creating…" : "Publish Event"}
                     </button>
                 </div>
             </form>

@@ -1,49 +1,98 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { serializeUserForClient } = require("../utils/userSerialization");
 
-// --- MODIFIED REGISTER LOGIC ---
+function setAuthCookie(res, userId) {
+    const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: "1d" });
+    res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+    });
+}
+
 exports.register = async (req, res) => {
     try {
-        // Now capturing 'year' from req.body
-        const { name, email, password, role, year } = req.body;
+        const {
+            name,
+            email,
+            password,
+            role,
+            year,
+            accountType,
+            branch,
+            admissionYear,
+            currentYear,
+            collegeId,
+            skills,
+            linkedIn,
+            github,
+        } = req.body;
 
         const existingUser = await User.findOne({ email });
         if (existingUser) return res.status(400).json({ message: "User already exists" });
 
         const hashedPassword = await bcrypt.hash(password, 10);
+        const isSeniorApplicant = accountType === "senior_applicant" || role === "senior_applicant";
 
-        // Logic: If admin, year is null. If student, we use the year provided.
+        if (isSeniorApplicant) {
+            const studyYear = Number(currentYear ?? year);
+            if (!studyYear || studyYear < 3 || studyYear > 4) {
+                return res.status(400).json({
+                    message: "Only 3rd and 4th year students are eligible for mentor access.",
+                });
+            }
+
+            if (!collegeId?.trim() || !branch?.trim() || !admissionYear || !skills?.trim()) {
+                return res.status(400).json({
+                    message: "College ID, admission year, branch, and skills are required for mentor applications.",
+                });
+            }
+
+            const user = await User.create({
+                name,
+                email,
+                password: hashedPassword,
+                role: "junior",
+                appliedRole: "senior",
+                verificationStatus: "pending_verification",
+                mentorVerified: false,
+                year: studyYear,
+                branch: branch.trim(),
+                admissionYear: Number(admissionYear),
+                collegeId: collegeId.trim(),
+                skills: skills.trim(),
+                linkedIn: linkedIn?.trim() || "",
+                github: github?.trim() || "",
+            });
+
+            setAuthCookie(res, user._id);
+
+            return res.status(201).json({
+                message:
+                    "Your mentor application is under review. You currently have junior access until verification is completed.",
+                user: serializeUserForClient(user, user.role),
+            });
+        }
+
+        const backendRole = role === "admin" ? "admin" : "junior";
         const user = await User.create({
             name,
             email,
             password: hashedPassword,
-            role: role || "junior",
-            year: role === "admin" ? null : year
+            role: backendRole,
+            year: backendRole === "admin" ? null : Number(year) || 1,
+            verificationStatus: "none",
+            appliedRole: "none",
+            mentorVerified: backendRole === "admin",
         });
 
-        const token = jwt.sign(
-            { id: user._id },
-            process.env.JWT_SECRET,
-            { expiresIn: "1d" }
-        );
+        setAuthCookie(res, user._id);
 
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "strict"
-        });
-
-        // Returning year in the response so the frontend profile can show it
         res.status(201).json({
             message: "User registered successfully",
-            user: {
-                _id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-                year: user.year
-            }
+            user: serializeUserForClient(user, user.role),
         });
     } catch (err) {
         console.log("REGISTER ERROR DETAILS:", err);
@@ -51,7 +100,6 @@ exports.register = async (req, res) => {
     }
 };
 
-// --- LOGIN LOGIC ---
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -61,42 +109,33 @@ exports.login = async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ message: "Wrong password" });
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+        setAuthCookie(res, user._id);
 
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "strict"
-        });
+        let message = "Login successful";
+        if (user.verificationStatus === "pending_verification") {
+            message =
+                "Your mentor application is under review. You currently have junior access until verification is completed.";
+        }
 
         res.json({
-            message: "Login successful",
-            user: {
-                _id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-                year: user.year
-            }
+            message,
+            user: serializeUserForClient(user, user.role),
         });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 };
 
-// --- LOGOUT LOGIC --- 
 exports.logout = (req, res) => {
     res.clearCookie("token");
     res.json({ message: "Logged out" });
 };
 
-// --- FIXED PROFILE LOGIC ---
 exports.getProfile = async (req, res) => {
     try {
-        const user = await User.findById(req.user.id).select("-password");
+        const user = await User.findById(req.user._id).select("-password");
         if (!user) return res.status(404).json({ message: "User not found" });
-        console.log("Current User Role in DB:", user.role);
-        res.json({ user });
+        res.json({ user: serializeUserForClient(user, user.role) });
     } catch (err) {
         res.status(500).json({ message: "Server error" });
     }

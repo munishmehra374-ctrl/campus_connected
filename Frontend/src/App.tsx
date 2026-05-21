@@ -1,12 +1,13 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import MentorStatusBanner from "./components/MentorStatusBanner";
 
 // Pages
 import HomePage from "./pages/HomePage";
 import ResourcesPage from "./pages/ResourcesPage";
 import MentorshipPage from "./pages/MentorshipPage";
-import EventsPage from "./pages/EventsPage";
+import CampusHubPage from "./pages/CampusHubPage";
 import SocietiesPage from "./pages/SocietiesPage";
 import SocietyDetail from "./pages/SocietiesPage/components/SocietyDetail/SocietyDetail";
 import CreateSociety from "./pages/SocietiesPage/CreateSociety";
@@ -19,18 +20,20 @@ import DomainDetails from "./pages/CareerPage/components/DomainDetails";
 import LoginPage from "./pages/AuthPage/LoginForm";
 import RegisterPage from "./pages/AuthPage/RegisterForm";
 import ProtectedRoute from "./pages/AuthPage/ProtectedRoute";
+import MentorVerificationPage from "./pages/MentorVerificationPage";
 
 const MainLayout = () => {
   return (
     <>
       <Navbar />
+      <MentorStatusBanner />
       <Routes>
         <Route path="home" element={<HomePage />} />
         <Route path="resources" element={<ResourcesPage />} />
         <Route path="mentorship" element={<MentorshipPage />} />
         {/* Campus Hub (navbar) + legacy /events links */}
-        <Route path="campus-hub" element={<EventsPage />} />
-        <Route path="events" element={<EventsPage />} />
+        <Route path="campus-hub" element={<CampusHubPage />} />
+        <Route path="events" element={<Navigate to="/campus-hub" replace />} />
 
         {/* Societies Module */}
         <Route path="societies" element={<SocietiesPage />} />
@@ -42,6 +45,15 @@ const MainLayout = () => {
         {/* Career Module */}
         <Route path="career" element={<CareerPage />} />
         <Route path="career/:id" element={<DomainDetails />} />
+
+        <Route
+          path="mentor-verifications"
+          element={
+            <ProtectedRoute adminOnly>
+              <MentorVerificationPage />
+            </ProtectedRoute>
+          }
+        />
 
         <Route path="*" element={<Navigate to="/home" replace />} />
       </Routes>

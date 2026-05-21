@@ -18,17 +18,40 @@ export const deleteWorkshopApi = (id: string, wsId: string) => api.delete(`/api/
 export const deleteSociety = (id: string) => api.delete(`/api/societies/${id}`);
 
 // --- EVENTS / CAMPUS HUB ---
-export const fetchEvents = (params?: { type?: string; search?: string; featured?: boolean }) =>
-    api.get("/api/events", { params });
+export const fetchEvents = (params?: {
+    type?: string;
+    search?: string;
+    featured?: boolean;
+    approval?: string;
+    mine?: boolean;
+}) => api.get("/api/events", { params });
+export const fetchCampusHubSummary = () => api.get("/api/events/hub-summary");
+export const fetchOrganizerDashboard = () => api.get("/api/events/organizer/dashboard");
 export const fetchEventById = (id: string) => api.get(`/api/events/${id}`);
 export const createEvent = (data: Record<string, unknown>) => api.post("/api/events", data);
-export const registerForEvent = (id: string, body: { note?: string; userEmail?: string }) =>
-    api.post(`/api/events/${id}/register`, body);
+export const registerForEvent = (
+    id: string,
+    body: { fullName: string; userEmail: string; note: string }
+) => api.post(`/api/events/${id}/register`, body);
+export const updateEventRegistration = (eventId: string, regId: string, status: "approved" | "rejected") =>
+    api.patch(`/api/events/${eventId}/registrations/${regId}`, { status });
 export const rsvpEvent = (id: string) => api.post(`/api/events/${id}/rsvp`);
 export const toggleEventBookmark = (id: string) => api.post(`/api/events/${id}/bookmark`);
-export const updateEventRegistration = (eventId: string, regId: string, status: string) =>
-    api.patch(`/api/events/${eventId}/registrations/${regId}`, { status });
+export const hideEventFromFeed = (id: string) => api.patch(`/api/events/${id}/hide`);
+export const approveEvent = (id: string, featured?: boolean) =>
+    api.patch(`/api/events/${id}/approve`, { featured });
+export const rejectEvent = (id: string, feedback?: string) =>
+    api.patch(`/api/events/${id}/reject`, { feedback });
+export const addEventComment = (id: string, content: string) =>
+    api.post(`/api/events/${id}/comments`, { content });
 export const deleteEvent = (id: string) => api.delete(`/api/events/${id}`);
+
+// --- SENIOR MENTOR VERIFICATION (admin) ---
+export const fetchPendingMentorApplications = () => api.get("/api/senior-verification/pending");
+export const approveMentorApplication = (id: string) =>
+    api.patch(`/api/senior-verification/${id}/approve`);
+export const rejectMentorApplication = (id: string, reason?: string) =>
+    api.patch(`/api/senior-verification/${id}/reject`, { reason });
 
 // --- CAREER MODULE ---
 export const fetchCareers = () => api.get("/api/career");
@@ -66,6 +89,19 @@ export const markQuestionSolved = (
 export const reopenQuestion = (questionId: string) => api.patch(`/api/questions/${questionId}/reopen`);
 export const hideQuestionFromFeed = (questionId: string) =>
     api.patch(`/api/questions/${questionId}/hide`);
+
+// --- STUDY RESOURCE HUB (academic materials only) ---
+export const fetchStudyResources = () => api.get("/api/resources");
+export const fetchPendingStudyResources = () => api.get("/api/resources/pending");
+export const uploadStudyResource = (formData: FormData) =>
+    api.post("/api/resources", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+    });
+export const approveStudyResource = (id: string) => api.put(`/api/resources/${id}/approve`);
+export const rejectStudyResource = (id: string) => api.put(`/api/resources/${id}/reject`);
+export const deleteStudyResource = (id: string) => api.delete(`/api/resources/${id}`);
+export const trackStudyResourceDownload = (id: string) =>
+    api.post(`/api/resources/${id}/download`);
 
 // --- NOTIFICATIONS ---
 export const fetchNotifications = () => api.get("/api/notifications");

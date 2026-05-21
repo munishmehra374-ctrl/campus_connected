@@ -13,6 +13,7 @@ const societyRoutes = require('./routes/societyRoutes');
 const questionRoutes = require('./routes/questionRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const careerRoutes = require('./routes/careerRoutes');
+const seniorVerificationRoutes = require('./routes/seniorVerificationRoutes');
 
 
 dotenv.config();
@@ -46,6 +47,7 @@ app.use('/api/societies', societyRoutes);
 app.use('/api/questions', questionRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/career", careerRoutes);
+app.use("/api/senior-verification", seniorVerificationRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

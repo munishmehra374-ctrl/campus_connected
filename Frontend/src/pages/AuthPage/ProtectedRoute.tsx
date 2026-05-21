@@ -3,15 +3,20 @@ import { useAuth } from "../../context/AuthContext"; // Import the hook
 
 interface Props {
   children: React.ReactNode;
+  adminOnly?: boolean;
 }
 
-const ProtectedRoute = ({ children }: Props) => {
-  const { isAuth, loading } = useAuth();
+const ProtectedRoute = ({ children, adminOnly }: Props) => {
+  const { isAuth, user, loading } = useAuth();
 
-  if (loading) return null; // Wait for the check to finish
+  if (loading) return null;
 
   if (!isAuth) {
     return <Navigate to="/login" replace />;
+  }
+
+  if (adminOnly && user?.role !== "admin") {
+    return <Navigate to="/home" replace />;
   }
 
   return <>{children}</>;

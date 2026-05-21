@@ -1,290 +1,1191 @@
 /* =========================================
-   1. LAYOUT & SPACING
+   MENTORSHIP PAGE — layout & discussion UI
+   Scoped under .mentorship-page where possible
    ========================================= */
+
+/* --- Page shell --- */
 .mentorship-page {
     background: #020617;
     min-height: 100vh;
-    padding: 60px 10%;
-    color: white;
-    font-family: 'Inter', sans-serif;
-    /* Added flex center for hero alignment */
+    width: 94%;
+    max-width: 1380px;
+    margin: 0 auto;
+    padding: 72px 24px 80px;
+    color: #f1f5f9;
+    font-family: 'Inter', system-ui, sans-serif;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
+    box-sizing: border-box;
 }
 
-.mentorship-hero {
-    margin-bottom: 60px;
+.mentorship-page *,
+.mentorship-page *::before,
+.mentorship-page *::after {
+    box-sizing: border-box;
+}
+
+/* --- Hero --- */
+.mentorship-page .mentorship-hero {
+    margin-bottom: 48px;
     text-align: center;
-    /* Center the text */
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
-    /* Adds space between the 3 lines */
+    gap: 14px;
 }
 
-/* Specific styling for the 3 lines to remove congestion */
-.mentorship-hero h2 {
-    font-size: 1.2rem;
-    color: #6366f1;
-    margin: 0;
-    letter-spacing: 2px;
-}
-
-.mentorship-hero h1 {
-    font-size: 3rem;
+.mentorship-page .mentorship-hero h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
     font-weight: 800;
-    margin: 10px 0;
-    letter-spacing: -1px;
+    margin: 0;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: #f8fafc;
 }
 
-.moderation-notice {
+.mentorship-page .moderation-notice {
     color: #94a3b8;
-    font-size: 0.95rem;
-    max-width: 500px;
-    line-height: 1.5;
+    font-size: 1rem;
+    max-width: 720px;
+    line-height: 1.65;
+    margin: 0;
 }
 
-.mentor-search-container {
+.mentorship-page .badge {
+    display: inline-block;
+    background: rgba(99, 102, 241, 0.15);
+    color: #818cf8;
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border: 1px solid rgba(99, 102, 241, 0.25);
+}
+
+/* --- Search & filters --- */
+.mentorship-page .mentor-search-container {
     display: flex;
     flex-direction: column;
-    gap: 25px;
-    margin-bottom: 40px;
+    gap: 20px;
+    margin-bottom: 36px;
     width: 100%;
-    /* Ensure search takes full width of container */
-    max-width: 800px;
 }
 
-/* =========================================
-   2. SEARCH & FILTERS
-   ========================================= */
-.search-row {
+.mentorship-page .search-row {
     display: flex;
-    gap: 15px;
+    flex-wrap: wrap;
+    gap: 14px;
     align-items: center;
 }
 
-.search-box {
-    background: #0f172a;
-    border: 1px solid #1e293b;
-    padding: 14px 20px;
-    border-radius: 12px;
-    color: white;
+.mentorship-page .search-box {
     flex: 1;
-    transition: all 0.3s ease;
+    min-width: 220px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid #1e293b;
+    padding: 14px 18px;
+    border-radius: 12px;
+    color: #f8fafc;
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.search-box:focus {
+.mentorship-page .search-box:focus {
     border-color: #6366f1;
-    background: #1e293b;
     outline: none;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
 
-.mentor-filters {
+.mentorship-page .mentor-filters {
     display: flex;
-    gap: 12px;
-    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start;
 }
 
-.filter-btn {
+.mentorship-page .filter-btn {
     background: transparent;
     border: 1px solid #334155;
     color: #94a3b8;
     padding: 8px 20px;
     border-radius: 100px;
     cursor: pointer;
-    font-size: 0.9rem;
-    transition: 0.3s ease;
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
-.filter-btn:hover {
-    color: white;
+.mentorship-page .filter-btn:hover {
+    color: #f1f5f9;
     border-color: #6366f1;
 }
 
-.filter-btn.active {
+.mentorship-page .filter-btn.active {
     background: #6366f1;
-    color: white;
+    color: #fff;
     border-color: #6366f1;
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.35);
 }
 
-/* =========================================
-   3. QUESTION CARDS
-   ========================================= */
-.questions-list {
+/* --- Questions list --- */
+.mentorship-page .questions-list {
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 28px;
     width: 100%;
-    max-width: 800px;
 }
 
-.question-card {
-    background: #0b1224;
-    border: 1px solid #1e293b;
+.mentorship-page .loading-text,
+.mentorship-page .empty-text {
+    text-align: center;
+    color: #64748b;
+    font-size: 1rem;
+    padding: 48px 24px;
+}
+
+/* --- Question card --- */
+.mentorship-page .question-card {
+    background: linear-gradient(145deg, rgba(11, 18, 36, 0.95), rgba(15, 23, 42, 0.6));
+    border: 1px solid rgba(30, 41, 59, 0.9);
     border-radius: 20px;
-    padding: 35px;
-    /* Increased padding */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 32px 36px;
+    width: 100%;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
 }
 
-.question-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+.mentorship-page .question-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(99, 102, 241, 0.08);
 }
 
-.solved-card {
-    border-color: #059669;
-    opacity: 0.9;
+.mentorship-page .question-card.solved-card {
+    border-color: rgba(5, 150, 105, 0.45);
+    box-shadow: 0 4px 24px rgba(16, 185, 129, 0.08);
 }
 
-/* Status Tags */
-.status-tag {
+.mentorship-page .question-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+}
+
+.mentorship-page .question-top-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 12px;
+    margin-bottom: 18px;
+}
+
+.mentorship-page .status-tag {
     font-size: 0.7rem;
     font-weight: 800;
     text-transform: uppercase;
-    padding: 4px 12px;
-    border-radius: 6px;
-    margin-bottom: 15px;
-    display: inline-block;
+    letter-spacing: 0.06em;
+    padding: 5px 12px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
 }
 
-.pending {
-    background: rgba(234, 179, 8, 0.1);
+.mentorship-page .status-tag.pending {
+    background: rgba(234, 179, 8, 0.12);
     color: #eab308;
+    border: 1px solid rgba(234, 179, 8, 0.25);
 }
 
-.unsolved {
+.mentorship-page .status-tag.unsolved {
     background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
-.solved {
-    background: rgba(16, 185, 129, 0.1);
-    color: #10b981;
+.mentorship-page .status-tag.solved {
+    background: rgba(16, 185, 129, 0.12);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.25);
 }
 
-/* =========================================
-   4. ANSWERS & GUIDANCE
-   ========================================= */
-.answers-container {
-    margin: 25px 0;
-    padding-left: 15px;
-    border-left: 2px solid #1e293b;
-}
-
-.guidance-label {
-    font-size: 0.8rem;
-    color: #6366f1;
-    margin-bottom: 15px;
-    text-transform: uppercase;
-}
-
-.answer-bubble {
-    background: #0f172a;
-    padding: 15px 20px;
-    border-radius: 12px;
-    margin-bottom: 10px;
-    line-height: 1.6;
-}
-
-.senior-name-tag {
-    display: block;
+.mentorship-page .thread-count-badge {
     font-size: 0.75rem;
+    font-weight: 600;
     color: #94a3b8;
-    margin-top: 8px;
+    background: rgba(30, 41, 59, 0.6);
+    padding: 4px 12px;
+    border-radius: 100px;
+    border: 1px solid #334155;
+    white-space: nowrap;
+}
+
+.mentorship-page .thread-count-badge.private-badge {
+    color: #a78bfa;
+    background: rgba(99, 102, 241, 0.1);
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+.mentorship-page .question-card h3 {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin: 0 0 12px;
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+}
+
+.mentorship-page .question-card .description {
+    color: #cbd5e1;
+    font-size: 1rem;
+    line-height: 1.7;
+    margin: 0 0 16px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.mentorship-page .question-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.mentorship-page .tag-chip {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #818cf8;
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    padding: 4px 12px;
+    border-radius: 100px;
+}
+
+.mentorship-page .question-author {
+    font-size: 0.88rem;
+    color: #64748b;
+    margin: 0 0 20px;
+}
+
+.mentorship-page .question-author strong {
+    color: #94a3b8;
+}
+
+.mentorship-page .solved-by-line {
+    font-size: 0.88rem;
+    color: #6ee7b7;
+    margin: -8px 0 20px;
+    padding: 10px 14px;
+    background: rgba(16, 185, 129, 0.08);
+    border-radius: 10px;
+    border-left: 3px solid #10b981;
+}
+
+.mentorship-page .solved-by-line .solved-check {
+    margin-right: 6px;
+    font-weight: 700;
+}
+
+.mentorship-page .solved-by-line strong {
+    color: #a7f3d0;
+}
+
+.mentorship-page .thread-opened-hint {
+    margin-top: 10px;
+    color: #7c7cff;
+}
+
+/* --- Section headings --- */
+.mentorship-page .public-answers-section,
+.mentorship-page .threads-section {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(30, 41, 59, 0.8);
+    width: 100%;
+}
+
+.mentorship-page .threads-heading {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin: 0 0 6px;
+    letter-spacing: 0.02em;
+}
+
+.mentorship-page .threads-subheading {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin: 0 0 18px;
+    line-height: 1.5;
+    max-width: 100%;
+}
+
+.mentorship-page .empty-inline {
+    font-size: 0.9rem;
+    color: #64748b;
+    font-style: italic;
+    margin: 0;
+    padding: 16px 20px;
+    background: rgba(15, 23, 42, 0.5);
+    border-radius: 12px;
+    border: 1px dashed #334155;
+}
+
+.mentorship-page .private-threads-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* --- Public answer cards --- */
+.mentorship-page .public-answer-card {
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(51, 65, 85, 0.6);
+    border-radius: 14px;
+    padding: 20px 22px;
+    margin-bottom: 14px;
+    width: 100%;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mentorship-page .public-answer-card:last-child {
+    margin-bottom: 0;
+}
+
+.mentorship-page .public-answer-card:hover {
+    border-color: rgba(99, 102, 241, 0.35);
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.08);
+}
+
+.mentorship-page .public-answer-header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 12px 16px;
+    margin-bottom: 14px;
+}
+
+.mentorship-page .public-answer-header > div:nth-child(2) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 10px;
+    min-width: 0;
+}
+
+.mentorship-page .thread-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 0 16px rgba(99, 102, 241, 0.35);
+}
+
+.mentorship-page .thread-avatar.small {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+    border-radius: 10px;
+}
+
+.mentorship-page .public-answer-author,
+.mentorship-page .thread-senior-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #f1f5f9;
+}
+
+.mentorship-page .role-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 3px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+}
+
+.mentorship-page .role-badge.role-senior {
+    background: rgba(99, 102, 241, 0.2);
+    color: #a5b4fc;
+    border: 1px solid rgba(99, 102, 241, 0.35);
+}
+
+.mentorship-page .role-badge.role-junior {
+    background: rgba(56, 189, 248, 0.15);
+    color: #7dd3fc;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.mentorship-page .role-badge.role-admin {
+    background: rgba(251, 191, 36, 0.12);
+    color: #fcd34d;
+    border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.mentorship-page .thread-stat {
+    font-size: 0.78rem;
+    color: #64748b;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.mentorship-page .public-answer-time {
+    justify-self: end;
+    text-align: right;
+}
+
+.mentorship-page .public-answer-content {
+    color: #e2e8f0;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    margin: 0 0 14px;
+    padding-left: 48px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.mentorship-page .public-answer-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 16px;
+    padding-left: 48px;
+    margin-top: 4px;
+}
+
+.mentorship-page .public-answer-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    color: #64748b;
+}
+
+/* --- Private thread panels --- */
+.mentorship-page .thread-panel {
+    background: rgba(11, 18, 36, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 16px;
+    padding: 20px 22px;
+    width: 100%;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mentorship-page .thread-panel.expanded {
+    border-color: rgba(99, 102, 241, 0.4);
+    box-shadow: 0 8px 32px rgba(99, 102, 241, 0.1);
+}
+
+.mentorship-page .thread-private-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #a78bfa;
+    margin-bottom: 14px;
+    padding: 4px 10px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 6px;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.mentorship-page .thread-panel-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 16px 20px;
+    margin-bottom: 12px;
+}
+
+.mentorship-page .thread-senior-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 180px;
+}
+
+.mentorship-page .thread-senior-info > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.mentorship-page .thread-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 18px;
+}
+
+.mentorship-page .thread-panel-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.mentorship-page .thread-preview {
+    font-size: 0.88rem;
+    color: #64748b;
+    margin: 0;
+    padding: 12px 14px;
+    background: rgba(15, 23, 42, 0.5);
+    border-radius: 10px;
+    line-height: 1.5;
+    font-style: italic;
+}
+
+.mentorship-page .thread-readonly-note {
+    font-size: 0.88rem;
+    color: #94a3b8;
+    margin: 12px 0 0;
+    padding: 12px 16px;
+    background: rgba(30, 41, 59, 0.4);
+    border-radius: 10px;
+    border-left: 3px solid #6366f1;
+}
+
+/* --- Thread action buttons --- */
+.mentorship-page .thread-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid #334155;
+    background: rgba(15, 23, 42, 0.8);
+    color: #cbd5e1;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    white-space: nowrap;
+}
+
+.mentorship-page .thread-action-btn:hover {
+    border-color: #6366f1;
+    color: #f1f5f9;
+    background: rgba(99, 102, 241, 0.12);
+}
+
+.mentorship-page .thread-action-btn.primary {
+    background: #6366f1;
+    border-color: #6366f1;
+    color: #fff;
+    box-shadow: 0 0 16px rgba(99, 102, 241, 0.3);
+}
+
+.mentorship-page .thread-action-btn.primary:hover {
+    background: #4f46e5;
+    border-color: #4f46e5;
+    box-shadow: 0 0 24px rgba(99, 102, 241, 0.45);
+}
+
+.mentorship-page .thread-action-btn.primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.mentorship-page .thread-action-btn.danger-outline {
+    color: #f87171;
+    border-color: rgba(239, 68, 68, 0.4);
+    padding: 8px 10px;
+}
+
+.mentorship-page .thread-action-btn.danger-outline:hover {
+    background: rgba(239, 68, 68, 0.12);
+    border-color: #ef4444;
+}
+
+/* --- Private chat --- */
+.mentorship-page .thread-chat {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(30, 41, 59, 0.8);
+    width: 100%;
+}
+
+.mentorship-page .thread-chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-height: 420px;
+    overflow-y: auto;
+    padding: 8px 4px 16px 0;
+    margin-bottom: 12px;
+    scrollbar-width: thin;
+    scrollbar-color: #334155 transparent;
+}
+
+.mentorship-page .thread-chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.mentorship-page .thread-chat-messages::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 3px;
+}
+
+.mentorship-page .chat-bubble-row {
+    display: flex;
+    width: 100%;
+}
+
+.mentorship-page .chat-bubble-row.own {
+    justify-content: flex-end;
+}
+
+.mentorship-page .chat-bubble-row.other {
+    justify-content: flex-start;
+}
+
+.mentorship-page .chat-bubble {
+    max-width: min(85%, 520px);
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(51, 65, 85, 0.5);
+}
+
+.mentorship-page .chat-bubble.bubble-senior {
+    background: rgba(99, 102, 241, 0.12);
+    border-color: rgba(99, 102, 241, 0.25);
+}
+
+.mentorship-page .chat-bubble.bubble-junior {
+    background: rgba(15, 23, 42, 0.9);
+    border-color: #334155;
+}
+
+.mentorship-page .chat-bubble-row.own .chat-bubble {
+    border-bottom-right-radius: 4px;
+}
+
+.mentorship-page .chat-bubble-row.other .chat-bubble {
+    border-bottom-left-radius: 4px;
+}
+
+.mentorship-page .bubble-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.mentorship-page .bubble-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    background: #334155;
+    color: #f1f5f9;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.mentorship-page .bubble-sender {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #f1f5f9;
+}
+
+.mentorship-page .bubble-delete {
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    transition: color 0.2s ease, background 0.2s ease;
+}
+
+.mentorship-page .bubble-delete:hover {
+    color: #f87171;
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.mentorship-page .bubble-content {
+    margin: 0 0 8px;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: #e2e8f0;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.mentorship-page .bubble-time {
+    font-size: 0.72rem;
+    color: #64748b;
+}
+
+.mentorship-page .thread-chat-error {
+    font-size: 0.85rem;
+    color: #f87171;
+    margin: 8px 0 0;
+}
+
+.mentorship-page .thread-chat-input {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+}
+
+.mentorship-page .thread-chat-input input {
+    flex: 1;
+    min-width: 0;
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 12px 16px;
+    color: #f8fafc;
+    font-size: 0.92rem;
+}
+
+.mentorship-page .thread-chat-input input:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+.mentorship-page .chat-send-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: #6366f1;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+    flex-shrink: 0;
+}
+
+.mentorship-page .chat-send-btn:hover:not(:disabled) {
+    background: #4f46e5;
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+}
+
+.mentorship-page .chat-send-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* --- Mark solved & glass panel --- */
+.mentorship-page .glass-panel {
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 14px;
+    padding: 20px 22px;
+    margin-top: 24px;
+}
+
+.mentorship-page .mark-solved-box {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.mentorship-page .mark-solved-title {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #e2e8f0;
+    margin: 0;
+}
+
+.mentorship-page .mark-solved-select {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    max-width: 320px;
+}
+
+.mentorship-page .mark-solved-select span {
+    font-size: 0.82rem;
+    color: #94a3b8;
     font-weight: 600;
 }
 
-/* =========================================
-   5. BUTTONS (Clean & Matte)
-   ========================================= */
-.action-btn {
-    padding: 10px 22px;
+.mentorship-page .mark-solved-select select {
+    background: #0f172a;
+    border: 1px solid #334155;
+    color: #f1f5f9;
+    padding: 10px 14px;
     border-radius: 10px;
-    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+/* --- Card action bar --- */
+.mentorship-page .card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(30, 41, 59, 0.8);
+}
+
+.mentorship-page .action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
     font-size: 0.85rem;
     cursor: pointer;
     border: none;
-    transition: 0.2s;
-    box-shadow: none !important;
-    /* Force matte look */
+    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+    white-space: nowrap;
 }
 
-.ask-btn,
-.answer-btn {
+.mentorship-page .action-btn:hover {
+    transform: translateY(-1px);
+}
+
+.mentorship-page .ask-btn,
+.mentorship-page .answer-btn {
     background: #6366f1;
-    color: white;
+    color: #fff;
+    box-shadow: 0 0 16px rgba(99, 102, 241, 0.25);
 }
 
-.success-btn {
+.mentorship-page .ask-btn:hover,
+.mentorship-page .answer-btn:hover {
+    background: #4f46e5;
+    box-shadow: 0 0 24px rgba(99, 102, 241, 0.4);
+}
+
+.mentorship-page .success-btn {
     background: #10b981;
-    color: white;
+    color: #fff;
 }
 
-.solve-confirm-btn {
+.mentorship-page .solve-confirm-btn,
+.mentorship-page .action-btn.solve-confirm-btn {
     background: #059669;
-    color: white;
-    padding: 12px 25px;
-    border-radius: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    border: none;
-    box-shadow: none;
+    color: #fff;
 }
 
-/* =========================================
-   6. ASK QUESTION MODAL ALIGNMENT FIX
-   ========================================= */
-.modal-form {
-    background: #0b1224;
-    padding: 40px;
+.mentorship-page .reopen-btn {
+    background: transparent;
+    color: #818cf8;
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    margin-top: 16px;
+}
+
+.mentorship-page .reopen-btn:hover {
+    background: rgba(99, 102, 241, 0.12);
+}
+
+.mentorship-page .hide-feed-btn {
+    background: transparent;
+    color: #94a3b8;
+    border: 1px solid #334155;
+}
+
+.mentorship-page .hide-feed-btn:hover {
+    color: #f1f5f9;
+    border-color: #475569;
+}
+
+.mentorship-page .delete-btn {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.mentorship-page .delete-btn:hover {
+    background: rgba(239, 68, 68, 0.25);
+}
+
+.mentorship-page .action-hint {
+    font-size: 0.82rem;
+    color: #64748b;
+    font-style: italic;
+    padding: 8px 0;
+}
+
+.mentorship-page .modal-hint {
+    font-size: 0.88rem;
+    color: #94a3b8;
+    line-height: 1.55;
+    margin: 0;
+}
+
+/* --- Modals (mentorship only) --- */
+.mentorship-page .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 6, 23, 0.85);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 24px;
+}
+
+.mentorship-page .modal-form {
+    background: linear-gradient(160deg, #0b1224, #0f172a);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    padding: 36px 40px;
     border-radius: 20px;
     width: 100%;
-    max-width: 600px;
+    max-width: 560px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(99, 102, 241, 0.08);
 }
 
-.modal-form h2 {
-    margin-bottom: 30px;
+.mentorship-page .modal-form h2,
+.mentorship-page .modal-form h3 {
+    margin: 12px 0 16px;
     text-align: center;
+    color: #f8fafc;
+    font-size: 1.5rem;
 }
 
-/* Group container to fix Title and Tag alignment */
-.form-group {
+.mentorship-page .modal-form h3 {
+    font-size: 1.25rem;
+}
+
+.mentorship-page .modal-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.mentorship-page .modal-subtitle {
+    font-size: 0.9rem;
+    color: #94a3b8;
+    margin: 8px 0;
+}
+
+.mentorship-page .modal-error {
+    color: #f87171;
+    font-size: 0.88rem;
+    margin: 8px 0;
+}
+
+.mentorship-page .form-group {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-bottom: 25px;
-    /* Spacing between input blocks */
+    margin-bottom: 20px;
 }
 
-.form-group label {
-    font-size: 0.85rem;
+.mentorship-page .form-group label {
+    font-size: 0.82rem;
     color: #818cf8;
     font-weight: 600;
     text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
-.modal-input,
-.modal-textarea {
+.mentorship-page .modal-input,
+.mentorship-page .modal-textarea {
     width: 100%;
     background: #020617;
     border: 1px solid #1e293b;
-    padding: 15px;
+    padding: 14px 16px;
     border-radius: 10px;
-    color: white;
-    font-size: 1rem;
+    color: #f8fafc;
+    font-size: 0.95rem;
+    margin-bottom: 14px;
+    font-family: inherit;
 }
 
-.modal-textarea {
-    min-height: 150px;
-    resize: none;
+.mentorship-page .modal-textarea {
+    min-height: 140px;
+    resize: vertical;
 }
 
-.modal-actions {
+.mentorship-page .modal-input:focus,
+.mentorship-page .modal-textarea:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+.mentorship-page .modal-actions {
     display: flex;
+    flex-wrap: wrap;
     justify-content: flex-end;
-    gap: 15px;
-    margin-top: 10px;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.mentorship-page .mini-btn {
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+    border: none;
+    transition: background 0.2s ease;
+}
+
+.mentorship-page .mini-btn.danger {
+    background: transparent;
+    color: #94a3b8;
+    border: 1px solid #334155;
+}
+
+.mentorship-page .mini-btn.danger:hover {
+    color: #f1f5f9;
+    border-color: #475569;
+}
+
+.mentorship-page .btn-outline,
+.mentorship-page .btn-cancel {
+    background: transparent;
+    color: #94a3b8;
+    border: 1px solid #334155;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+}
+
+.mentorship-page .btn-outline:hover,
+.mentorship-page .btn-cancel:hover {
+    color: #f1f5f9;
+    border-color: #475569;
+}
+
+.mentorship-page .btn-solid,
+.mentorship-page .btn-primary {
+    background: #6366f1;
+    color: #fff;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+    box-shadow: 0 0 16px rgba(99, 102, 241, 0.3);
+}
+
+.mentorship-page .btn-solid:hover:not(:disabled),
+.mentorship-page .btn-primary:hover:not(:disabled) {
+    background: #4f46e5;
+}
+
+.mentorship-page .btn-solid:disabled,
+.mentorship-page .btn-primary:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.mentorship-page .btn-danger-solid {
+    background: #dc2626;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+}
+
+.mentorship-page .btn-danger-solid:hover {
+    background: #b91c1c;
+}
+
+.mentorship-page .confirm-modal {
+    max-width: 440px;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .mentorship-page {
+        width: 96%;
+        padding: 56px 16px 64px;
+    }
+
+    .mentorship-page .question-card {
+        padding: 24px 20px;
+    }
+
+    .mentorship-page .public-answer-content,
+    .mentorship-page .public-answer-actions {
+        padding-left: 0;
+    }
+
+    .mentorship-page .public-answer-header {
+        grid-template-columns: auto 1fr;
+    }
+
+    .mentorship-page .public-answer-time {
+        grid-column: 1 / -1;
+        justify-self: start;
+        margin-left: 48px;
+    }
+
+    .mentorship-page .thread-panel-header {
+        flex-direction: column;
+    }
+
+    .mentorship-page .thread-panel-actions {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .mentorship-page .thread-meta {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .mentorship-page .search-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .mentorship-page .ask-btn {
+        width: 100%;
+    }
+
+    .mentorship-page .card-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .mentorship-page .card-actions .action-btn {
+        width: 100%;
+    }
 }

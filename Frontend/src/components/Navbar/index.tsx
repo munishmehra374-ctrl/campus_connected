@@ -4,8 +4,6 @@ import logo from "../../assets/logo.png";
 import "./style.css";
 import api from "../../api";
 import { useAuth } from "../../context/AuthContext";
-import NotificationBell from "../NotificationBell";
-
 const Navbar: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -83,7 +81,6 @@ const Navbar: React.FC = () => {
                     ) : (
                         // CHANGE 3: Display the user's name and a role-based badge
                         <div className="user-nav-container">
-                            <NotificationBell />
                             <div className="user-profile-info">
                                 <span className="user-greeting">Hi, {user?.name}</span>
                                 <span className={`role-tag ${user?.role}`}>

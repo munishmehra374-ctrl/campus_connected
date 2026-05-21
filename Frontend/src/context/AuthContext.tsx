@@ -2,19 +2,26 @@ import { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 import api from "../api";
 
-// 1. Define what a User looks like
-interface User {
+export interface AuthUser {
     _id: string;
     name: string;
     email: string;
     role: "junior" | "senior" | "admin";
+    year?: number;
+    branch?: string;
+    admissionYear?: number;
+    appliedRole?: "none" | "senior";
+    verificationStatus?: "none" | "pending_verification" | "approved" | "rejected";
+    mentorVerified?: boolean;
+    isSeniorApplicant?: boolean;
+    skills?: string[];
 }
 
 interface AuthContextType {
     isAuth: boolean;
-    user: User | null; // Added user object
+    user: AuthUser | null;
     setIsAuth: (value: boolean) => void;
-    setUser: (user: User | null) => void; // Ability to update user manually
+    setUser: (user: AuthUser | null) => void;
     loading: boolean;
 }
 
@@ -22,19 +29,16 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isAuth, setIsAuth] = useState(false);
-    const [user, setUser] = useState<User | null>(null); // New state
+    const [user, setUser] = useState<AuthUser | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                // 2. Call the profile route we just made
                 const res = await api.get("/api/auth/profile");
-
-                // res.data.user because your backend sends { user: { ... } }
                 setUser(res.data.user);
                 setIsAuth(true);
-            } catch (error) {
+            } catch {
                 setUser(null);
                 setIsAuth(false);
             } finally {
@@ -56,3 +60,10 @@ export const useAuth = () => {
     if (!context) throw new Error("useAuth must be used within AuthProvider");
     return context;
 };
+
+export function isVerifiedSeniorUser(user: AuthUser | null): boolean {
+    if (!user) return false;
+    if (user.role === "admin") return true;
+    if (user.role !== "senior") return false;
+    return Boolean(user.mentorVerified);
+}

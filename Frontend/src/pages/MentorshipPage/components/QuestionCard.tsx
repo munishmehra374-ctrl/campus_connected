@@ -86,7 +86,13 @@ const QuestionCard = ({ question, onUpdate, onHide, pollActive = false }: Questi
 
     const [helpedSeniorId, setHelpedSeniorId] = useState("");
 
-
+    useEffect(() => {
+        if (localQuestion.status === "Solved" && localQuestion.solvedMeta?.helpedBySeniorId) {
+            setHelpedSeniorId(String(localQuestion.solvedMeta.helpedBySeniorId));
+        } else if (localQuestion.status !== "Solved") {
+            setHelpedSeniorId("");
+        }
+    }, [localQuestion.status, localQuestion.solvedMeta?.helpedBySeniorId]);
 
     const handleQuestionUpdate = (updated: Question) => {
 
@@ -138,40 +144,14 @@ const QuestionCard = ({ question, onUpdate, onHide, pollActive = false }: Questi
 
 
 
-    const handleApprove = async () => {
-
-        try {
-
-            const res = await api.patch(`/api/questions/${localQuestion._id}/approve`);
-
-            handleQuestionUpdate(res.data);
-
-        } catch {
-
-            alert("Approval failed");
-
-        }
-
-    };
-
-
-
     const handleDeleteQuestion = async () => {
-
         if (!window.confirm("Delete this question and all related threads?")) return;
-
         try {
-
             await api.delete(`/api/questions/${localQuestion._id}`);
-
-            window.location.reload();
-
+            onHide?.(localQuestion._id);
         } catch {
-
             alert("Delete failed");
-
         }
-
     };
 
 
@@ -278,28 +258,20 @@ const QuestionCard = ({ question, onUpdate, onHide, pollActive = false }: Questi
 
 
 
+    const solvedMentorName = local.solvedMeta?.helpedBySeniorName?.trim();
+
     const solvedLine =
-
-        local.status === "Solved" && local.solvedMeta?.solvedAt ? (
-
+        local.status === "Solved" ? (
             <p className="solved-by-line">
-
-                Solved by junior
-
-                {local.solvedMeta.helpedBySeniorName && (
-
+                <span className="solved-check">✓</span>
+                {solvedMentorName ? (
                     <>
-
-                        {" "}
-
-                        · Helped by <strong>{local.solvedMeta.helpedBySeniorName}</strong>
-
+                        Solved by <strong>{solvedMentorName}</strong>
                     </>
-
+                ) : (
+                    "Marked as solved"
                 )}
-
             </p>
-
         ) : null;
 
 
@@ -398,22 +370,14 @@ const QuestionCard = ({ question, onUpdate, onHide, pollActive = false }: Questi
 
                     ) : (
 
-                        publicAnswers.map((ans) => (
-
+                        publicAnswers.map((ans, idx) => (
                             <PublicAnswerCard
-
-                                key={ans._id}
-
+                                key={ans._id || `${ans.seniorId}-${idx}`}
                                 question={local}
-
                                 answer={ans}
-
                                 isAuthor={isAuthor}
-
                                 onQuestionUpdate={handleQuestionUpdate}
-
                             />
-
                         ))
 
                     )}
@@ -464,7 +428,7 @@ const QuestionCard = ({ question, onUpdate, onHide, pollActive = false }: Questi
 
 
 
-                {isAuthor && local.status === "Unsolved" && (
+                {isAuthor && (local.status === "Unsolved" || local.status === "Pending") && (
 
                     <div className="mark-solved-box glass-panel">
 
@@ -555,32 +519,16 @@ const QuestionCard = ({ question, onUpdate, onHide, pollActive = false }: Questi
 
 
                     {userRole === "admin" && (
-
-                        <>
-
-                            {local.status === "Pending" && (
-
-                                <button type="button" className="action-btn success-btn" onClick={handleApprove}>
-
-                                    Approve
-
-                                </button>
-
-                            )}
-
-                            <button type="button" className="action-btn delete-btn" onClick={handleDeleteQuestion}>
-
-                                Delete question
-
-                            </button>
-
-                        </>
-
+                        <button type="button" className="action-btn delete-btn" onClick={handleDeleteQuestion}>
+                            Delete question
+                        </button>
                     )}
 
 
 
-                    {(userRole === "senior" || userRole === "admin") && local.status === "Unsolved" && !seniorAlreadyPublic && (
+                    {(userRole === "senior" || userRole === "admin") &&
+                        (local.status === "Unsolved" || local.status === "Pending") &&
+                        !seniorAlreadyPublic && (
 
                         <button
 

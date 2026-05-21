@@ -1,3 +1,5 @@
+import { FILTER_TABS, SEMESTERS } from "../data";
+
 interface Props {
     type: string;
     setType: (v: string) => void;
@@ -5,23 +7,24 @@ interface Props {
     setSem: (v: string) => void;
     search: string;
     setSearch: (v: string) => void;
-    role: string; // 🔴 NEW
 }
 
-const ResourcesFilters = ({ type, setType, sem, setSem, search, setSearch, role }: Props) => {
+const ResourcesFilters = ({ type, setType, sem, setSem, search, setSearch }: Props) => {
     return (
         <section className="resources-filters">
             <input
                 type="text"
-                placeholder="🔍 Search resources..."
+                placeholder="Search by title, subject, or category..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                aria-label="Search resources"
             />
 
-            <div className="filter-tabs">
-                {["All", "Notes", "Paper"].map((t) => (
+            <div className="filter-tabs filter-tabs-scroll">
+                {FILTER_TABS.map((t) => (
                     <button
                         key={t}
+                        type="button"
                         className={type === t ? "active" : ""}
                         onClick={() => setType(t)}
                     >
@@ -31,11 +34,12 @@ const ResourcesFilters = ({ type, setType, sem, setSem, search, setSearch, role 
             </div>
 
             <div className="semester-filter">
-                <span>Filter by Semester:</span>
+                <span>Filter by semester</span>
                 <div className="sem-buttons">
-                    {["All", "Sem 1", "Sem 2", "Sem 3", "Sem 4", "Sem 5", "Sem 6", "Sem 7", "Sem 8"].map((s) => (
+                    {SEMESTERS.map((s) => (
                         <button
                             key={s}
+                            type="button"
                             className={sem === s ? "active" : ""}
                             onClick={() => setSem(s)}
                         >

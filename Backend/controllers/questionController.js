@@ -1,6 +1,7 @@
 const Question = require("../models/Question");
 const MentorshipThread = require("../models/MentorshipThread");
 const Notification = require("../models/Notification");
+const User = require("../models/User");
 
 async function createNotification({ userId, type, title, body, meta }) {
     try {
@@ -67,7 +68,32 @@ async function migrateLegacyIfNeeded(questionDoc) {
         dirty = true;
     }
 
+    if (q.status === "Pending") {
+        q.status = "Unsolved";
+        dirty = true;
+    }
+
     if (dirty) await q.save();
+}
+
+async function resolveMentorName(question, seniorId, providedName) {
+    let name = (providedName || "").trim();
+    if (name) return name;
+
+    const pa = (question.publicAnswers || []).find(
+        (a) => a.seniorId && a.seniorId.toString() === String(seniorId)
+    );
+    if (pa?.seniorName) return pa.seniorName;
+
+    const thread = await MentorshipThread.findOne({
+        questionId: question._id,
+        seniorId,
+        isDeleted: false,
+    });
+    if (thread?.seniorName) return thread.seniorName;
+
+    const user = await User.findById(seniorId).select("name");
+    return user?.name || "Mentor";
 }
 
 async function loadThreadsForQuestion(questionId, user) {
@@ -126,6 +152,7 @@ exports.askQuestion = async (req, res) => {
         const question = new Question({
             ...req.body,
             author: { id: req.user._id, name: req.user.name, role: req.user.role },
+            status: "Unsolved",
             publicAnswers: [],
             solvedMeta: {},
         });
@@ -172,12 +199,11 @@ exports.addPublicAnswer = async (req, res) => {
         await migrateLegacyIfNeeded(question);
         question = await Question.findById(req.params.id);
 
-        if (question.status === "Pending") {
-            return res.status(400).json({ message: "Question is not approved yet" });
-        }
         if (question.status === "Solved") {
             return res.status(400).json({ message: "This question is marked solved" });
         }
+
+        question.publicAnswers = question.publicAnswers || [];
 
         const already = question.publicAnswers.some(
             (a) => a.seniorId.toString() === req.user._id.toString()
@@ -227,7 +253,14 @@ exports.openPrivateThread = async (req, res) => {
             return res.status(403).json({ message: "Only the question author can open a private mentorship thread" });
         }
 
-        const answer = question.publicAnswers.id(publicAnswerId);
+        question.publicAnswers = question.publicAnswers || [];
+
+        let answer = question.publicAnswers.id(publicAnswerId);
+        if (!answer) {
+            answer = question.publicAnswers.find(
+                (a) => a._id && a._id.toString() === String(publicAnswerId)
+            );
+        }
         if (!answer) return res.status(404).json({ message: "Public answer not found" });
 
         let thread = await MentorshipThread.findOne({
@@ -460,8 +493,16 @@ exports.markSolved = async (req, res) => {
         question.solvedMeta.solvedAt = new Date();
         question.solvedMeta.solvedByJuniorId = req.user._id;
         if (helpedBySeniorId) {
+            const mentorName = await resolveMentorName(
+                question,
+                helpedBySeniorId,
+                helpedBySeniorName
+            );
             question.solvedMeta.helpedBySeniorId = helpedBySeniorId;
-            question.solvedMeta.helpedBySeniorName = helpedBySeniorName || null;
+            question.solvedMeta.helpedBySeniorName = mentorName;
+        } else {
+            question.solvedMeta.helpedBySeniorId = null;
+            question.solvedMeta.helpedBySeniorName = null;
         }
         await question.save();
 

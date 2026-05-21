@@ -5,13 +5,25 @@
     min-height: 100vh;
 }
 
+.loading-state,
+.grid-error,
+.grid-empty {
+    color: #9ca3af;
+    text-align: center;
+    padding: 24px 0;
+}
+
+.grid-error {
+    color: #f87171;
+}
+
 /* HERO */
 .resources-hero {
     text-align: center;
     margin-bottom: 40px;
 }
 
-.badge {
+.hero-badge {
     display: inline-block;
     background: rgba(124, 124, 255, 0.15);
     color: #7c7cff;
@@ -27,7 +39,7 @@
 }
 
 .resources-hero p {
-    max-width: 700px;
+    max-width: 720px;
     margin: auto;
     color: #9ca3af;
     font-size: 1rem;
@@ -58,21 +70,26 @@
     color: #6b7280;
 }
 
-/* Tabs */
 .filter-tabs {
     display: flex;
-    gap: 10px;
-    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.filter-tabs-scroll {
+    max-height: none;
 }
 
 .filter-tabs button {
-    padding: 6px 16px;
+    padding: 6px 14px;
     border-radius: 999px;
     border: none;
     background: #0f172a;
     color: #cbd5e1;
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
+    transition: background 0.2s ease, transform 0.15s ease;
 }
 
 .filter-tabs .active {
@@ -80,7 +97,6 @@
     color: #050914;
 }
 
-/* Semester */
 .semester-filter span {
     font-size: 0.8rem;
     color: #9ca3af;
@@ -101,6 +117,7 @@
     color: #cbd5e1;
     cursor: pointer;
     font-size: 0.75rem;
+    transition: background 0.2s ease;
 }
 
 .sem-buttons .active {
@@ -108,9 +125,8 @@
     color: #050914;
 }
 
-/* COUNT */
 .count {
-    margin: 20px 0;
+    margin: 20px 0 12px;
     color: #9ca3af;
     font-size: 0.85rem;
 }
@@ -142,25 +158,34 @@
 .card-top {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
     margin-bottom: 12px;
+}
+
+.card-top-left {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
 }
 
 .tag {
     padding: 4px 10px;
     border-radius: 999px;
-    font-size: 0.7rem;
-    font-weight: 500;
-}
-
-.tag.notes {
+    font-size: 0.68rem;
+    font-weight: 600;
     background: rgba(124, 124, 255, 0.15);
     color: #7c7cff;
 }
 
-.tag.paper {
-    background: rgba(255, 165, 0, 0.15);
-    color: orange;
-}
+.tag-notes { background: rgba(124, 124, 255, 0.15); color: #7c7cff; }
+.tag-pyq { background: rgba(255, 165, 0, 0.15); color: #ffb347; }
+.tag-assignment { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
+.tag-lab-manual { background: rgba(52, 211, 153, 0.15); color: #34d399; }
+.tag-cheat-sheet { background: rgba(244, 114, 182, 0.15); color: #f472b6; }
+.tag-interview-prep { background: rgba(167, 139, 250, 0.15); color: #a78bfa; }
+.tag-study-material { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
 
 .sem {
     background: #0f172a;
@@ -168,43 +193,338 @@
     border-radius: 999px;
     font-size: 0.7rem;
     color: #cbd5e1;
+    flex-shrink: 0;
 }
 
 .resource-card h3 {
-    font-size: 0.95rem;
-    margin: 8px 0 4px;
+    font-size: 1rem;
+    margin: 4px 0;
+    line-height: 1.35;
 }
 
 .subject {
-    color: #7c7cff;
-    font-size: 0.8rem;
+    color: #9ca3af;
+    font-size: 0.82rem;
+    margin: 0;
 }
 
-.meta,
-.stats {
-    display: flex;
-    justify-content: space-between;
+.meta {
+    margin-top: 10px;
     color: #9ca3af;
     font-size: 0.75rem;
-    margin-top: 10px;
 }
 
-/* BUTTON */
-.download-btn {
+.badge-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.role-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 3px 8px;
+    border-radius: 6px;
+}
+
+.role-junior {
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.role-senior {
+    background: rgba(124, 124, 255, 0.15);
+    color: #7c7cff;
+    border: 1px solid rgba(124, 124, 255, 0.35);
+}
+
+.role-admin {
+    background: rgba(251, 191, 36, 0.12);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, 0.35);
+}
+
+.upload-date {
+    font-size: 0.72rem;
+    color: #6b7280;
+}
+
+.card-footer {
     margin-top: auto;
+    padding-top: 14px;
+}
+
+.stats {
+    color: #6b7280;
+    font-size: 0.75rem;
+    margin-bottom: 10px;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.download-btn,
+.approve-btn,
+.reject-btn,
+.delete-btn {
+    padding: 8px 14px;
+    border-radius: 10px;
+    border: none;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease, opacity 0.2s;
+}
+
+.download-btn {
+    background: #020617;
+    color: #fff;
+    border: 1px solid #1f2937;
+}
+
+.download-btn:hover:not(:disabled) {
+    border-color: #7c7cff;
+    background: #0f172a;
+}
+
+.approve-btn {
+    background: #22c55e;
+    color: #050914;
+    font-weight: 600;
+}
+
+.approve-btn:hover:not(:disabled) {
+    background: #16a34a;
+}
+
+.reject-btn {
+    background: transparent;
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, 0.4);
+}
+
+.reject-btn:hover:not(:disabled) {
+    background: rgba(251, 191, 36, 0.1);
+}
+
+.delete-btn {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.delete-btn:hover:not(:disabled) {
+    background: rgba(239, 68, 68, 0.25);
+}
+
+button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.pending-owner-note {
+    font-size: 0.72rem;
+    color: #fbbf24;
+}
+
+.badge {
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.badge-pending {
+    background: rgba(251, 191, 36, 0.12);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, 0.35);
+}
+
+.badge-success {
+    background: rgba(34, 197, 94, 0.12);
+    color: #4ade80;
+    border: 1px solid rgba(34, 197, 94, 0.35);
+}
+
+.status-pending {
+    border-left: 4px solid #fbbf24;
+}
+
+.status-approved {
+    border-left: 4px solid #22c55e;
+}
+
+/* UPLOAD */
+.upload-section {
+    background: #0b1224;
+    border: 1px solid #1f2937;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.upload-header {
+    grid-column: span 2;
+}
+
+.upload-section h3 {
+    font-size: 1rem;
+    color: #7c7cff;
+    margin: 0 0 6px;
+}
+
+.upload-hint {
+    font-size: 0.8rem;
+    color: #9ca3af;
+    margin: 0;
+}
+
+.upload-hint-success {
+    color: #4ade80;
+}
+
+.upload-section input,
+.upload-section select {
     padding: 10px;
     border-radius: 10px;
     border: 1px solid #1f2937;
     background: #020617;
     color: white;
-    cursor: pointer;
     font-size: 0.8rem;
-    transition: background 0.2s ease, border-color 0.2s ease;
 }
 
-.download-btn:hover {
-    border-color: #7c7cff;
+.upload-section input[type="file"] {
+    grid-column: span 2;
+}
+
+.upload-error {
+    grid-column: span 2;
+    color: #f87171;
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+.upload-success {
+    grid-column: span 2;
+    color: #4ade80;
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+.upload-section > button {
+    grid-column: span 2;
+    padding: 10px;
+    border-radius: 12px;
+    border: none;
+    background: #7c7cff;
+    color: #050914;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.upload-section > button:hover:not(:disabled) {
+    background: #6366f1;
+    transform: translateY(-1px);
+}
+
+/* ADMIN PANEL */
+.admin-panel {
+    background: #0b1224;
+    border: 1px dashed rgba(124, 124, 255, 0.5);
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 30px;
+}
+
+.admin-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.admin-panel h3 {
+    font-size: 1rem;
+    color: #7c7cff;
+    margin: 0;
+}
+
+.admin-pending-count {
+    font-size: 0.78rem;
+    color: #9ca3af;
     background: #0f172a;
+    padding: 4px 12px;
+    border-radius: 999px;
+}
+
+.admin-panel-empty {
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+.admin-pending-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.admin-pending-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 14px;
+    background: #020617;
+    border: 1px solid #1f2937;
+    border-radius: 12px;
+    flex-wrap: wrap;
+}
+
+.admin-pending-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.admin-pending-info strong {
+    font-size: 0.9rem;
+}
+
+.admin-pending-info span {
+    font-size: 0.78rem;
+    color: #9ca3af;
+}
+
+.admin-pending-meta {
+    color: #6b7280 !important;
+}
+
+.admin-pending-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
 /* RESPONSIVE */
@@ -222,235 +542,15 @@
     .resources-page {
         padding: 20px;
     }
-}
 
-/* ========================= */
-/* UPLOAD BUTTON (Filters) */
-/* ========================= */
+    .upload-section {
+        grid-template-columns: 1fr;
+    }
 
-.upload-btn {
-    margin-bottom: 14px;
-    padding: 8px 18px;
-    border-radius: 999px;
-    border: none;
-    background: #22c55e;
-    color: #050914;
-    font-size: 0.8rem;
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-}
-
-.upload-btn:hover {
-    background: #16a34a;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 14px rgba(34, 197, 94, 0.3);
-}
-
-/* ========================= */
-/* UPLOAD RESOURCE SECTION */
-/* ========================= */
-
-.upload-section {
-    background: #0b1224;
-    border: 1px solid #1f2937;
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 30px;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-}
-
-.upload-section h3 {
-    grid-column: span 2;
-    font-size: 1rem;
-    color: #7c7cff;
-}
-
-.upload-section input,
-.upload-section select {
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px solid #1f2937;
-    background: #020617;
-    color: white;
-    font-size: 0.8rem;
-}
-
-.upload-section input::placeholder {
-    color: #6b7280;
-}
-
-.upload-section button {
-    grid-column: span 2;
-    padding: 10px;
-    border-radius: 12px;
-    border: none;
-    background: #7c7cff;
-    color: #050914;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: background 0.2s ease, transform 0.2s ease;
-}
-
-.upload-section button:hover {
-    background: #6366f1;
-    transform: translateY(-1px);
-}
-
-/* ========================= */
-/* ADMIN VERIFY PANEL */
-/* ========================= */
-
-.admin-panel {
-    background: #0b1224;
-    border: 1px dashed #7c7cff;
-    border-radius: 16px;
-    padding: 18px;
-    margin-bottom: 30px;
-}
-
-.admin-panel h3 {
-    font-size: 1rem;
-    color: #7c7cff;
-    margin-bottom: 6px;
-}
-
-.admin-panel p {
-    font-size: 0.8rem;
-    color: #9ca3af;
-}
-
-/* ========================= */
-/* APPROVE BUTTON (Card) */
-/* ========================= */
-
-.approve-btn {
-    margin-top: 10px;
-    padding: 8px;
-    border-radius: 10px;
-    border: none;
-    background: #22c55e;
-    color: #050914;
-    cursor: pointer;
-    font-size: 0.75rem;
-    transition: background 0.2s ease, transform 0.2s ease;
-}
-
-.approve-btn:hover {
-    background: #16a34a;
-    transform: translateY(-1px);
-}
-
-/* ========================= */
-/* DISABLED / STATUS UI */
-/* ========================= */
-
-.resource-card.pending {
-    opacity: 0.6;
-    border-style: dashed;
-}
-
-/* ========================= */
-/* CURSOR & UX IMPROVEMENTS */
-/* ========================= */
-
-.filter-tabs button,
-.sem-buttons button,
-.download-btn,
-.upload-btn,
-.approve-btn {
-    cursor: pointer;
-}
-
-.filter-tabs button:active,
-.sem-buttons button:active {
-    transform: scale(0.95);
-}
-
-/* PENDING LABEL */
-.pending-label {
-    margin-left: 8px;
-    font-size: 0.65rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    color: #ff9800;
-    background: rgba(255, 152, 0, 0.1);
-    padding: 2px 8px;
-    border-radius: 4px;
-    border: 1px solid rgba(255, 152, 0, 0.3);
-}
-
-/* PENDING CARD STATE */
-.resource-card.pending-view {
-    border: 1px dashed #ff9800;
-    /* Distinct border for unverified items */
-    background: rgba(11, 18, 36, 0.8);
-}
-
-.resource-card.pending-view:hover {
-    border-color: #ffb74d;
-    box-shadow: 0 10px 25px rgba(255, 152, 0, 0.1);
-}
-
-.card-top-left {
-    display: flex;
-    align-items: center;
-}
-
-/* Ensure the actions container stacks buttons nicely */
-.actions {
-    margin-top: 15px;
-    width: 100%;
-}
-
-.approve-btn {
-    width: 100%;
-    font-weight: 600;
-}
-
-/* Badges */
-.badge {
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-  margin-left: 8px;
-  text-transform: uppercase;
-}
-
-.badge-pending {
-  background-color: #fff9db;
-  color: #f08c00;
-  border: 1px solid #ffe066;
-}
-
-.badge-success {
-  background-color: #ebfbee;
-  color: #2b8a3e;
-  border: 1px solid #b2f2bb;
-}
-
-/* Card Visual Feedback */
-.status-pending { border-left: 4px solid #fab005; }
-.status-approved { border-left: 4px solid #40c057; }
-
-.delete-btn {
-  background-color: #ff4d4d;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.delete-btn:hover {
-  background-color: #cc0000;
-}
-
-.actions {
-  display: flex;
-  gap: 10px;
-  align-items: center;
+    .upload-section input[type="file"],
+    .upload-header,
+    .upload-error,
+    .upload-section > button {
+        grid-column: span 1;
+    }
 }

@@ -1,11 +1,11 @@
 const ResourcesHero = () => {
     return (
         <section className="resources-hero">
-            <span className="badge">📘 Resource Hub</span>
-            <h1>Study Materials & Papers</h1>
+            <span className="hero-badge">Resource Hub</span>
+            <h1>Academic Study Materials</h1>
             <p>
-                Access organized notes, previous-year question papers, and study
-                materials shared by seniors who've aced these subjects.
+                Notes, PYQs, assignments, lab manuals, cheat sheets, interview prep,
+                and more — shared and verified by the campus community.
             </p>
         </section>
     );

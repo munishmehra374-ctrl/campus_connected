@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useAuth } from "../../context/AuthContext"; // Ensure path is correct
+import { useCallback, useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 import ResourcesHero from "./components/ResourcesHero";
 import ResourcesFilters from "./components/ResourcesFilters";
 import ResourceGrid from "./components/ResourceGrid";
@@ -8,42 +8,50 @@ import AdminVerifyPanel from "./components/AdminVerifyPanel";
 import "./style.css";
 
 const ResourcesPage = () => {
-    const { user, loading } = useAuth(); // Pull real user data
+    const { user, loading } = useAuth();
     const [type, setType] = useState("All");
     const [sem, setSem] = useState("All");
     const [search, setSearch] = useState("");
+    const [refreshKey, setRefreshKey] = useState(0);
 
-    // Professional handle for loading states
-    if (loading) return <div className="loading">Loading resources...</div>;
+    const handleRefresh = useCallback(() => {
+        setRefreshKey((k) => k + 1);
+    }, []);
 
-    // Normalize role to lowercase to avoid "Admin" vs "admin" bugs
+    if (loading) return <div className="resources-page loading-state">Loading resources...</div>;
+
     const currentRole = user?.role?.toLowerCase().trim() || "guest";
+    const canUpload = currentRole === "junior" || currentRole === "senior" || currentRole === "admin";
 
     return (
         <div className="resources-page">
             <ResourcesHero />
 
             <ResourcesFilters
-                type={type} setType={setType}
-                sem={sem} setSem={setSem}
-                search={search} setSearch={setSearch}
-                role={currentRole} 
+                type={type}
+                setType={setType}
+                sem={sem}
+                setSem={setSem}
+                search={search}
+                setSearch={setSearch}
             />
 
-            {/* Role-based UI components */}
-            {(currentRole === "senior" || currentRole === "admin") && (
-                <UploadResource />
+            {canUpload && (
+                <UploadResource role={currentRole} onSuccess={handleRefresh} />
             )}
 
             {currentRole === "admin" && (
-                <AdminVerifyPanel />
+                <AdminVerifyPanel refreshKey={refreshKey} onAction={handleRefresh} />
             )}
 
             <ResourceGrid
                 type={type}
                 sem={sem}
                 search={search}
-                role={currentRole} 
+                role={currentRole}
+                userId={user?._id}
+                refreshKey={refreshKey}
+                onRefresh={handleRefresh}
             />
         </div>
     );

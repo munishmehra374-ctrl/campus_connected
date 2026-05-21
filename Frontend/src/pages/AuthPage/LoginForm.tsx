@@ -1,6 +1,6 @@
 import "./style.css";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Mail, Lock, Sparkles } from "lucide-react";
 import api from "../../api";
 import { useAuth } from "../../context/AuthContext";
@@ -26,6 +26,14 @@ const LoginPage: React.FC = () => {
     const [infoMessage, setInfoMessage] = useState<string>("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    useEffect(() => {
+        const state = location.state as { infoMessage?: string } | null;
+        if (state?.infoMessage) {
+            setInfoMessage(state.infoMessage);
+            navigate(location.pathname, { replace: true, state: {} });
+        }
+    }, [location, navigate]);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
@@ -45,6 +53,9 @@ const LoginPage: React.FC = () => {
 
             setIsAuth(true);
             setUser(res.data.user);
+            if (res.data.message && res.data.message !== "Login successful") {
+                setInfoMessage(res.data.message);
+            }
             navigate("/home");
         } catch (err: unknown) {
             const message =

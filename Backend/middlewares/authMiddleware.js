@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const { isVerifiedSenior } = require("../utils/userSerialization");
 
 // 1. Protect Route (Verifies Token)
 const protect = async (req, res, next) => {
@@ -20,11 +21,22 @@ const protect = async (req, res, next) => {
 // 2. Authorize Roles (The one your societyRoutes uses)
 const authorize = (...roles) => {
     return (req, res, next) => {
-        if (!req.user || !roles.includes(req.user.role)) {
+        if (!req.user) {
+            return res.status(403).json({ message: "Access denied." });
+        }
+
+        if (!roles.includes(req.user.role)) {
             return res.status(403).json({
-                message: `Access denied: ${req.user.role} role not permitted.`
+                message: `Access denied: ${req.user.role} role not permitted.`,
             });
         }
+
+        if (roles.includes("senior") && req.user.role === "senior" && !isVerifiedSenior(req.user)) {
+            return res.status(403).json({
+                message: "Mentor verification required before using senior privileges.",
+            });
+        }
+
         next();
     };
 };

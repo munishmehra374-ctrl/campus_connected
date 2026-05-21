@@ -1,0 +1,61 @@
+.mentor-status-banner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+}
+
+.mentor-status-banner--pending {
+    background: rgba(234, 179, 8, 0.1);
+    border-bottom: 1px solid rgba(234, 179, 8, 0.25);
+    color: #fde047;
+}
+
+.mentor-status-banner--pending p {
+    margin: 0;
+    color: #cbd5e1;
+}
+
+.mentor-status-banner--verified {
+    background: rgba(16, 185, 129, 0.08);
+    border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+    justify-content: center;
+}
+
+.mentor-status-banner--admin {
+    background: rgba(99, 102, 241, 0.1);
+    border-bottom: 1px solid rgba(99, 102, 241, 0.25);
+    justify-content: space-between;
+    color: #c4b5fd;
+}
+
+.mentor-status-banner--admin button {
+    background: transparent;
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    color: #e2e8f0;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.82rem;
+}
+
+.mentor-status-pill {
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: rgba(234, 179, 8, 0.2);
+    color: #fde047;
+}
+
+.mentor-status-pill.verified {
+    background: rgba(16, 185, 129, 0.2);
+    color: #6ee7b7;
+}

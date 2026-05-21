@@ -77,39 +77,18 @@ const MentorshipPage = () => {
 
 
     const filteredQuestions = questions.filter((q) => {
-
         const matchSearch =
-
             q.title.toLowerCase().includes(search.toLowerCase()) ||
-
             q.description.toLowerCase().includes(search.toLowerCase());
 
-        const isVisible =
-
-            q.status !== "Pending" ||
-
-            user?.role === "admin" ||
-
-            user?._id === q.author?.id;
-
         const matchStatus =
-
             filter === "All"
-
                 ? true
-
                 : filter === "Open"
+                  ? q.status === "Unsolved" || q.status === "Pending"
+                  : q.status === "Solved";
 
-                  ? q.status === "Unsolved"
-
-                  : filter === "Solved"
-
-                    ? q.status === "Solved"
-
-                    : q.status === filter;
-
-        return matchSearch && matchStatus && isVisible;
-
+        return matchSearch && matchStatus;
     });
 
 
@@ -125,11 +104,8 @@ const MentorshipPage = () => {
                 <h1>Build Real Mentor Relationships</h1>
 
                 <p className="moderation-notice">
-
-                    Public answers build community knowledge. Private chats with mentors stay between you and them —
-
-                    start a private thread from any public answer.
-
+                    Questions appear instantly for mentors to answer. Public replies build community knowledge —
+                    open a private chat from any mentor answer for one-on-one follow-up.
                 </p>
 
             </section>
@@ -170,31 +146,16 @@ const MentorshipPage = () => {
 
                 <div className="mentor-filters">
 
-                    {["All", "Open", "Solved", "Pending"].map((f) => {
-
-                        if (f === "Pending" && user?.role !== "admin") return null;
-
-                        return (
-
-                            <button
-
-                                key={f}
-
-                                type="button"
-
-                                className={`filter-btn ${filter === f ? "active" : ""}`}
-
-                                onClick={() => setFilter(f)}
-
-                            >
-
-                                {f === "Open" ? "Open" : f}
-
-                            </button>
-
-                        );
-
-                    })}
+                    {["All", "Open", "Solved"].map((f) => (
+                        <button
+                            key={f}
+                            type="button"
+                            className={`filter-btn ${filter === f ? "active" : ""}`}
+                            onClick={() => setFilter(f)}
+                        >
+                            {f}
+                        </button>
+                    ))}
 
                 </div>
 
@@ -240,12 +201,13 @@ const MentorshipPage = () => {
 
                     onClose={() => setIsAskModalOpen(false)}
 
-                    onSuccess={() => {
-
+                    onSuccess={(created) => {
                         setIsAskModalOpen(false);
-
-                        loadQuestions();
-
+                        if (created) {
+                            setQuestions((prev) => [created, ...prev]);
+                        } else {
+                            loadQuestions();
+                        }
                     }}
 
                 />
