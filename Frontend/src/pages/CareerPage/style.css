@@ -1,3 +1,93 @@
+/* --- Career Roadmap Library (overview page) --- */
+.career-page {
+    min-height: 100vh;
+    background: radial-gradient(circle at top, #0b1220, #020617);
+    color: #f8fafc;
+    padding-bottom: 80px;
+}
+
+.career-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.career-header .subtitle {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #a78bfa;
+    margin-bottom: 12px;
+}
+
+.career-header .description {
+    max-width: 560px;
+    margin: 0 auto 8px;
+    color: #94a3b8;
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+.career-header .header-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.loading-state,
+.error-state,
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 80px 20px;
+    color: #94a3b8;
+    text-align: center;
+}
+
+.loader-spinner {
+    width: 44px;
+    height: 44px;
+    border: 3px solid #1e293b;
+    border-top-color: #8b5cf6;
+    border-radius: 50%;
+    animation: career-spin 0.9s linear infinite;
+}
+
+@keyframes career-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.retry-btn {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 1px solid #8b5cf6;
+    background: rgba(139, 92, 246, 0.15);
+    color: #c4b5fd;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.retry-btn:hover {
+    background: #8b5cf6;
+    color: white;
+}
+
+.empty-state .empty-icon {
+    font-size: 2.5rem;
+}
+
+.empty-state h3 {
+    color: #f8fafc;
+    font-size: 1.25rem;
+}
+
 /* Centering the Library Header */
 .career-header {
     text-align: center;
@@ -35,14 +125,26 @@
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 24px;
-    padding: 30px;
+    padding: 0;
     display: flex;
     flex-direction: column;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     cursor: pointer;
-    /* Interaction feedback */
     position: relative;
     overflow: hidden;
+    min-height: 200px;
+}
+
+.career-left {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 28px 28px 24px 22px;
+    gap: 2px;
+}
+
+.admin-controls-wrapper {
+    margin-top: 12px;
 }
 
 /* Hover Effect: Lift, Glow, and Border highlight */
@@ -157,4 +259,41 @@
 .plus-icon {
     font-size: 1.1rem;
     font-weight: bold;
+}
+
+/* Career card overview — clean scan layout */
+.career-card .badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid;
+    margin-bottom: 12px;
+}
+
+.career-card h2 {
+    font-size: 1.5rem;
+    color: #f8fafc;
+    margin: 0 0 8px;
+}
+
+.career-card .duration,
+.career-card .resource-count {
+    margin: 0.35rem 0;
+    color: #94a3b8;
+    font-size: 0.95rem;
+}
+
+.career-card .view-more {
+    margin-top: auto;
+    padding-top: 1rem;
+    color: #a78bfa;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+.career-card:hover .view-more {
+    color: #c4b5fd;
 }

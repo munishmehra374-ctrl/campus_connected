@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import AdminControl from "./AdminControls";
 import type { CareerDomain } from "../data";
+import "../style.css";
 
 interface CareerCardProps {
     domain: CareerDomain;
@@ -37,14 +38,6 @@ const CareerCard: React.FC<CareerCardProps> = ({ domain, fetchDomains }) => {
 
                 <h2>{domain.title}</h2>
                 <p className="duration">⏱ {domain.duration}</p>
-
-                <div className="skills-preview">
-                    {domain.skills?.slice(0, 4).map((skill, i) => (
-                        <span key={i} className="skill-pill">
-                            {skill}
-                        </span>
-                    ))}
-                </div>
 
                 <div className="resource-count">
                     📚 {domain.resources?.length || 0} Resources

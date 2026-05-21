@@ -11,6 +11,7 @@ const resourceRoutes = require("./routes/resourceRoutes");
 const eventRoutes = require("./routes/eventRoutes");
 const societyRoutes = require('./routes/societyRoutes');
 const questionRoutes = require('./routes/questionRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
 const careerRoutes = require('./routes/careerRoutes');
 
 
@@ -43,6 +44,7 @@ app.use("/api/resources", resourceRoutes);
 app.use("/api/events", eventRoutes);
 app.use('/api/societies', societyRoutes);
 app.use('/api/questions', questionRoutes);
+app.use("/api/notifications", notificationRoutes);
 app.use("/api/career", careerRoutes);
 
 const PORT = process.env.PORT || 5000;

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import api from "../../../api";
+import "./style.css";
 
 const CareerModal = ({ closeModal, refreshData }: any) => {
     const [formData, setFormData] = useState({

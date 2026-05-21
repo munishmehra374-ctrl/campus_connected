@@ -1,14 +1,16 @@
-import "./authFooter.css";
+import "./authfooter.css";
 
 const AuthFooter = () => {
     return (
-        <div className="auth-footer-bg">
+        <footer className="auth-footer">
             <div className="auth-footer-content">
-                <p>© 2026 Campus Connected</p>
-                <p>Contact: support@campusconnected.com</p>
-                <p>Privacy Policy | Terms of Service</p>
+                <span>© 2026 Campus Connected</span>
+                <span className="auth-footer-dot" aria-hidden="true">
+                    ·
+                </span>
+                <span>support@campusconnected.com</span>
             </div>
-        </div>
+        </footer>
     );
 };
 

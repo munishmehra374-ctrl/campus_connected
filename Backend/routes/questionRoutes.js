@@ -1,27 +1,43 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const {
     askQuestion,
     approveQuestion,
-    answerQuestion,
+    addPublicAnswer,
+    openPrivateThread,
+    addThreadMessage,
+    deleteThread,
+    deleteThreadMessage,
+    getQuestionById,
     getQuestions,
-    resolveQuestion,
-    deleteQuestion
-} = require('../controllers/questionController');
-const { protect } = require('../middlewares/authMiddleware');
+    deleteQuestion,
+    markSolved,
+    reopenQuestion,
+    hideQuestion,
+    answerQuestion,
+    createThread,
+} = require("../controllers/questionController");
+const { protect } = require("../middlewares/authMiddleware");
 
-// Get questions
-router.get('/', getQuestions);
+router.get("/", protect, getQuestions);
+router.get("/:id", protect, getQuestionById);
 
-// Junior Actions
-router.post('/', protect, askQuestion);
-router.patch('/:id/resolve', protect, resolveQuestion);
+router.post("/", protect, askQuestion);
 
-// Senior Actions
-router.post('/:id/answer', protect, answerQuestion);
+router.post("/:id/public-answers", protect, addPublicAnswer);
+router.post("/:id/private-threads", protect, openPrivateThread);
+router.post("/:id/threads/:threadId/messages", protect, addThreadMessage);
+router.delete("/:id/threads/:threadId", protect, deleteThread);
+router.delete("/:id/threads/:threadId/messages/:messageId", protect, deleteThreadMessage);
 
-// Admin Actions
-router.patch('/:id/approve', protect, approveQuestion);
-router.delete('/:id', protect, deleteQuestion);
+router.patch("/:id/approve", protect, approveQuestion);
+router.patch("/:id/mark-solved", protect, markSolved);
+router.patch("/:id/reopen", protect, reopenQuestion);
+router.patch("/:id/hide", protect, hideQuestion);
+router.delete("/:id", protect, deleteQuestion);
+
+/** Deprecated client paths — map to new behavior */
+router.post("/:id/answer", protect, answerQuestion);
+router.post("/:id/threads", protect, createThread);
 
 module.exports = router;

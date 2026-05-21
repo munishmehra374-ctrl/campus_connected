@@ -11,5 +11,4 @@ const eventSchema = new mongoose.Schema({
     filled: { type: Number, default: 0 },
     capacity: { type: Number, required: true }
 });
-
 module.exports = mongoose.model('Event', eventSchema);

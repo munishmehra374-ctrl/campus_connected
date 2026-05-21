@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
-import api from "../../../api";
+import api, { deleteCareerResource } from "../../../api";
 import SeniorAction from "../components/SeniorActions";
 import "./style.css";
 
@@ -10,6 +10,8 @@ const DomainDetails = () => {
     const { user } = useAuth();
     const [domain, setDomain] = useState<any | null>(null);
     const [loading, setLoading] = useState(true);
+    const [deletingId, setDeletingId] = useState<string | null>(null);
+    const [toast, setToast] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
     const fetchDomainDetails = useCallback(async () => {
         if (!id || id === "undefined") return;
@@ -27,18 +29,33 @@ const DomainDetails = () => {
         fetchDomainDetails();
     }, [fetchDomainDetails]);
 
+    const showToast = (type: "success" | "error", text: string) => {
+        setToast({ type, text });
+        setTimeout(() => setToast(null), 3000);
+    };
+
     const handleDeleteResource = async (e: React.MouseEvent, resourceId: string) => {
         e.preventDefault();
         e.stopPropagation();
 
+        if (!id) return;
         if (!window.confirm("Are you sure you want to delete this resource?")) return;
 
+        setDeletingId(resourceId);
         try {
-            await api.delete(`/api/career/${id}/resource/${resourceId}`);
-            fetchDomainDetails();
+            await deleteCareerResource(id, resourceId);
+            setDomain((prev: any) => ({
+                ...prev,
+                resources: prev.resources.filter(
+                    (r: any) => String(r._id) !== String(resourceId)
+                ),
+            }));
+            showToast("success", "Resource deleted successfully.");
         } catch (err) {
             console.error("Delete failed", err);
-            alert("Failed to delete resource.");
+            showToast("error", "Failed to delete resource. Please try again.");
+        } finally {
+            setDeletingId(null);
         }
     };
 
@@ -53,6 +70,11 @@ const DomainDetails = () => {
 
     return (
         <div className="details-page-wrapper">
+            {toast && (
+                <div className={`career-toast career-toast-${toast.type}`} role="status">
+                    {toast.text}
+                </div>
+            )}
             <div className="details-container">
                 {/* 1. ADMIN INFORMATION SECTION */}
                 <header className="details-header" style={{ borderLeft: `6px solid ${domain.color || '#8b5cf6'}` }}>
@@ -115,11 +137,13 @@ const DomainDetails = () => {
 
                                     {(user?.role === "senior" || user?.role === "admin") && (
                                         <button
+                                            type="button"
                                             className="delete-resource-btn"
                                             onClick={(e) => handleDeleteResource(e, res._id)}
+                                            disabled={deletingId === res._id}
                                             title="Delete Resource"
                                         >
-                                            🗑️
+                                            {deletingId === res._id ? "…" : "🗑️"}
                                         </button>
                                     )}
                                 </div>

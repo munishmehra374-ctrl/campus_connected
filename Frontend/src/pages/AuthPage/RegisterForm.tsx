@@ -1,8 +1,9 @@
 import "./style.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Authfooter from "../../components/Authfooter";
+import { Sparkles } from "lucide-react";
 import api from "../../api";
+import logo from "../../assets/logo.png";
 
 type Role = "Junior" | "Senior" | "Admin";
 
@@ -21,7 +22,6 @@ const RegisterPage: React.FC = () => {
         e.preventDefault();
         setError("");
 
-        // Validation
         if (!name || !email || !password || !confirmPassword) {
             setError("All fields are required");
             return;
@@ -32,14 +32,12 @@ const RegisterPage: React.FC = () => {
             return;
         }
 
-        // Student-specific validation (Year logic)
         if (role === "Senior" && (year < 3 || year > 4)) {
             setError("Only 3rd and 4th year students can register as Senior.");
             return;
         }
 
         try {
-            // Convert role to backend format
             const backendRole =
                 role === "Junior" ? "junior" :
                     role === "Senior" ? "senior" :
@@ -50,98 +48,170 @@ const RegisterPage: React.FC = () => {
                 email,
                 password,
                 role: backendRole,
-                // Facultiy/Admin doesn't need a college year
                 year: role === "Admin" ? null : year
             });
 
             navigate("/login");
-        } catch (err: any) {
-            setError(err.response?.data?.message || "Registration failed");
+        } catch (err: unknown) {
+            const message =
+                err && typeof err === "object" && "response" in err
+                    ? (err as { response?: { data?: { message?: string } } }).response?.data?.message
+                    : undefined;
+            setError(message || "Registration failed");
         }
     };
 
     return (
-        <div className="login-bg">
-            <div className="login-top-bar">
-                <h1 className="brand">Campus Connected</h1>
-                <div className="top-actions">
-                    <button onClick={() => navigate("/login")} className="top-btn">
+        <div className="auth-page">
+            <div className="auth-bg" aria-hidden="true">
+                <div className="auth-grid" />
+                <div className="auth-blob auth-blob--1" />
+                <div className="auth-blob auth-blob--2" />
+                <div className="auth-blob auth-blob--3" />
+            </div>
+
+            <header className="auth-navbar">
+                <button
+                    type="button"
+                    className="auth-brand"
+                    onClick={() => navigate("/login")}
+                >
+                    <img src={logo} alt="" className="auth-brand-logo" />
+                    <span>Campus Connected</span>
+                </button>
+
+                <div className="auth-nav-actions">
+                    <button
+                        type="button"
+                        className="auth-nav-btn"
+                        onClick={() => navigate("/login")}
+                    >
                         Login
                     </button>
-                    <button onClick={() => navigate("/register")} className="top-btn primary">
+                    <button
+                        type="button"
+                        className="auth-nav-btn auth-nav-btn--primary auth-nav-btn--active"
+                        onClick={() => navigate("/register")}
+                    >
                         Sign Up
                     </button>
                 </div>
-            </div>
+            </header>
 
-            <div className="login-center">
-                {/* Applied the 'register-card' for extra width to fit the form-groups */}
-                <form className="auth-form login-card register-card" onSubmit={handleRegister}>
-                    <h2>Register</h2>
-
-                    <input
-                        placeholder="Full Name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        required
-                    />
-
-                    {/* ROLE SELECTOR - Now with label styling */}
-                    <div className="form-group">
-                        <label>Register As:</label>
-                        <select value={role} onChange={(e) => setRole(e.target.value as Role)}>
-                            <option value="Junior">Junior Student</option>
-                            <option value="Senior">Senior Student</option>
-                            <option value="Admin">Faculty (Admin)</option>
-                        </select>
+            <div className="auth-split">
+                <section className="auth-hero auth-fade-in">
+                    <div className="auth-hero-badge">
+                        <Sparkles size={14} />
+                        <span>Join the community</span>
                     </div>
+                    <h1 className="auth-hero-title">
+                        Campus <span className="auth-gradient-text">Connected</span>
+                    </h1>
+                    <p className="auth-hero-tagline">Connect. Learn. Mentor. Grow.</p>
+                    <p className="auth-hero-desc">
+                        Create your account and start exploring mentorship, study resources,
+                        campus events, and student societies tailored to your role.
+                    </p>
+                </section>
 
-                    {/* CONDITIONAL RENDERING: Year is hidden for Admin/Faculty */}
-                    {role !== "Admin" && (
+                <section className="auth-panel auth-fade-in auth-fade-in--delay">
+                    <form
+                        className="auth-glass-card auth-card--register auth-form"
+                        onSubmit={handleRegister}
+                    >
+                        <div className="auth-card-header">
+                            <div className="auth-card-icon">
+                                <img src={logo} alt="Campus Connected" />
+                            </div>
+                            <h2 className="auth-card-title">Create Account</h2>
+                            <p className="auth-card-subtitle">
+                                Join your campus community today
+                            </p>
+                        </div>
+
+                        <input
+                            placeholder="Full Name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                        />
+
                         <div className="form-group">
-                            <label>Year of College:</label>
-                            <select value={year} onChange={(e) => setYear(Number(e.target.value))}>
-                                <option value={1}>1st Year</option>
-                                <option value={2}>2nd Year</option>
-                                <option value={3}>3rd Year</option>
-                                <option value={4}>4th Year</option>
+                            <label htmlFor="register-role">Register as</label>
+                            <select
+                                id="register-role"
+                                value={role}
+                                onChange={(e) => setRole(e.target.value as Role)}
+                            >
+                                <option value="Junior">Junior Student</option>
+                                <option value="Senior">Senior Student</option>
+                                <option value="Admin">Faculty (Admin)</option>
                             </select>
                         </div>
-                    )}
 
-                    <input
-                        type="email"
-                        placeholder="Email Address"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
+                        {role !== "Admin" && (
+                            <div className="form-group">
+                                <label htmlFor="register-year">Year of college</label>
+                                <select
+                                    id="register-year"
+                                    value={year}
+                                    onChange={(e) => setYear(Number(e.target.value))}
+                                >
+                                    <option value={1}>1st Year</option>
+                                    <option value={2}>2nd Year</option>
+                                    <option value={3}>3rd Year</option>
+                                    <option value={4}>4th Year</option>
+                                </select>
+                            </div>
+                        )}
 
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
+                        <input
+                            type="email"
+                            placeholder="Email address"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
 
-                    <input
-                        type="password"
-                        placeholder="Confirm Password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        required
-                    />
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
 
-                    {error && <p className="error-text">{error}</p>}
+                        <input
+                            type="password"
+                            placeholder="Confirm password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            required
+                        />
 
-                    <button type="submit" className="login-btn">
-                        Create Account
-                    </button>
-                </form>
+                        {error && <p className="error-text">{error}</p>}
+
+                        <button type="submit" className="login-btn auth-submit">
+                            Create Account
+                        </button>
+
+                        <p className="auth-switch">
+                            Already have an account?{" "}
+                            <button
+                                type="button"
+                                className="auth-switch-link"
+                                onClick={() => navigate("/login")}
+                            >
+                                Sign in
+                            </button>
+                        </p>
+                    </form>
+                </section>
             </div>
 
-            <Authfooter />
+            <footer className="auth-page-footer">
+                <span>© 2026 Campus Connected</span>
+            </footer>
         </div>
     );
 };

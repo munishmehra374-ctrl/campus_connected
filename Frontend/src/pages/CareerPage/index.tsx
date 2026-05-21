@@ -5,6 +5,7 @@ import CareerCard from "./components/index"; // Pointing to the updated Card com
 import CareerModal from "./components/CareerModal"; // Pointing to the simplified Admin modal
 import type { CareerDomain } from "./data";
 import "./style.css";
+import "./components/style.css";
 
 const CareerPage: React.FC = () => {
     const { user } = useAuth();

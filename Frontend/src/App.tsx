@@ -28,6 +28,8 @@ const MainLayout = () => {
         <Route path="home" element={<HomePage />} />
         <Route path="resources" element={<ResourcesPage />} />
         <Route path="mentorship" element={<MentorshipPage />} />
+        {/* Campus Hub (navbar) + legacy /events links */}
+        <Route path="campus-hub" element={<EventsPage />} />
         <Route path="events" element={<EventsPage />} />
 
         {/* Societies Module */}

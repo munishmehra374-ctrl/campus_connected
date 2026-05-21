@@ -1,80 +1,61 @@
-const CareerDomain = require("../models/CareerDomain");
 const fs = require("fs");
 const path = require("path");
+const CareerDomain = require("../models/CareerDomain");
 
+// 1. GET ALL PATHWAYS
 exports.getDomains = async (req, res) => {
     try {
         const domains = await CareerDomain.find().sort({ createdAt: -1 });
         res.status(200).json(domains);
     } catch (err) {
-        res.status(500).json({ message: "Server error" });
+        res.status(500).json({ message: "Server error fetching domains" });
     }
 };
 
+// 2. GET SINGLE DOMAIN
 exports.getDomainById = async (req, res) => {
     try {
         const domain = await CareerDomain.findById(req.params.id);
-        if (!domain) return res.status(404).json({ message: "Not found" });
+        if (!domain) return res.status(404).json({ message: "Domain not found" });
         res.status(200).json(domain);
     } catch (err) {
-        res.status(500).json({ message: "Error" });
+        res.status(500).json({ message: "Error fetching domain details" });
     }
 };
 
+// 3. ADD RESOURCE (Handles YouTube vs PDF)
 exports.addResource = async (req, res) => {
     try {
         const { id } = req.params;
         const { title, type, url } = req.body;
+
         let finalUrl = url;
-        if (req.file) finalUrl = `/uploads/${req.file.filename}`;
+        if (req.file) {
+            finalUrl = `/uploads/${req.file.filename}`;
+        }
 
         const newResource = {
             title,
             type: req.file ? 'material' : type,
             url: finalUrl,
-            addedBy: req.user ? req.user.name : "Senior Member"
+            addedBy: req.user ? req.user.name : "Senior Member",
+            createdAt: new Date()
         };
 
-        const updated = await CareerDomain.findByIdAndUpdate(
+        const updatedDomain = await CareerDomain.findByIdAndUpdate(
             id,
             { $push: { resources: newResource } },
             { new: true }
         );
-        res.status(201).json(updated);
+
+        if (!updatedDomain) return res.status(404).json({ message: "Not found" });
+        res.status(201).json(updatedDomain);
     } catch (error) {
-        res.status(500).json({ message: "Error adding resource" });
+        res.status(500).json({ message: "Server error adding resource" });
     }
 };
 
-exports.deleteResource = async (req, res) => {
-    try {
-        const { id, resourceId } = req.params;
-        const domain = await CareerDomain.findById(id);
-        if (!domain) return res.status(404).json({ message: "Domain not found" });
-
-        const resource = domain.resources.id(resourceId);
-
-        if (resource && resource.type === 'material' && resource.url?.startsWith('/uploads/')) {
-            const fileName = path.basename(resource.url);
-            const filePath = path.join(process.cwd(), "uploads", fileName);
-            if (fs.existsSync(filePath)) {
-                try { fs.unlinkSync(filePath); } catch (err) { console.error(err); }
-            }
-        }
-
-        await CareerDomain.findByIdAndUpdate(
-            id,
-            { $pull: { resources: { _id: resourceId } } },
-            { new: true, runValidators: false }
-        );
-
-        res.status(200).json({ message: "Deleted successfully" });
-    } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
-    }
-};
-
-// ADDED THIS: The missing function that was causing the crash
+// 4. ADD A SENIOR TIP
 exports.addTip = async (req, res) => {
     try {
         const { text } = req.body;
@@ -94,20 +75,57 @@ exports.addTip = async (req, res) => {
     }
 };
 
+// 5. CREATE DOMAIN (Admin Only)
 exports.createDomain = async (req, res) => {
     try {
         const newDomain = new CareerDomain(req.body);
         await newDomain.save();
         res.status(201).json(newDomain);
     } catch (err) {
-        res.status(400).json({ message: "Validation failed" });
+        res.status(400).json({ message: "Validation failed." });
     }
 };
 
+// 6. DELETE A SINGLE RESOURCE FROM A PATHWAY
+exports.deleteResource = async (req, res) => {
+    try {
+        const { id, resourceId } = req.params;
+
+        const domain = await CareerDomain.findById(id);
+        if (!domain) {
+            return res.status(404).json({ message: "Domain not found" });
+        }
+
+        const resource = domain.resources.id(resourceId);
+        if (!resource) {
+            return res.status(404).json({ message: "Resource not found" });
+        }
+
+        if (resource.url && resource.url.startsWith("/uploads/")) {
+            const filePath = path.join(__dirname, "..", resource.url);
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+            }
+        }
+
+        domain.resources.pull(resourceId);
+        await domain.save();
+
+        res.status(200).json({
+            message: "Resource deleted successfully",
+            domain,
+        });
+    } catch (err) {
+        res.status(500).json({ message: "Failed to delete resource" });
+    }
+};
+
+// 7. DELETE DOMAIN
 exports.deleteDomain = async (req, res) => {
     try {
-        await CareerDomain.findByIdAndDelete(req.params.id);
-        res.status(200).json({ message: "Deleted" });
+        const deleted = await CareerDomain.findByIdAndDelete(req.params.id);
+        if (!deleted) return res.status(404).json({ message: "Domain not found" });
+        res.status(200).json({ message: "Deleted successfully" });
     } catch (err) {
         res.status(500).json({ message: "Delete failed" });
     }

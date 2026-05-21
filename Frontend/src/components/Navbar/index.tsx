@@ -4,6 +4,7 @@ import logo from "../../assets/logo.png";
 import "./style.css";
 import api from "../../api";
 import { useAuth } from "../../context/AuthContext";
+import NotificationBell from "../NotificationBell";
 
 const Navbar: React.FC = () => {
     const navigate = useNavigate();
@@ -18,8 +19,7 @@ const Navbar: React.FC = () => {
         { name: "Home", path: "/home" },
         { name: "Resources", path: "/resources" },
         { name: "Mentorship", path: "/mentorship" },
-        { name: "Events", path: "/events" },
-        { name: "Societies", path: "/societies" },
+        { name: "Campus Hub", path: "/campus-hub" },
         { name: "Career", path: "/career" },
     ];
 
@@ -51,15 +51,23 @@ const Navbar: React.FC = () => {
                 </div>
 
                 <ul className="nav-links">
-                    {links.map((link) => (
+                    {links.map((link) => {
+                        const isActive =
+                            location.pathname === link.path ||
+                            (link.path === "/campus-hub" &&
+                                (location.pathname.startsWith("/campus-hub") ||
+                                    location.pathname.startsWith("/events") ||
+                                    location.pathname.startsWith("/societies")));
+                        return (
                         <li
                             key={link.name}
-                            className={location.pathname === link.path ? "nav-item active-link" : "nav-item"}
+                            className={isActive ? "nav-item active-link" : "nav-item"}
                             onClick={() => navigate(link.path)}
                         >
                             {link.name}
                         </li>
-                    ))}
+                        );
+                    })}
                 </ul>
 
                 <div className="nav-actions">
@@ -75,6 +83,7 @@ const Navbar: React.FC = () => {
                     ) : (
                         // CHANGE 3: Display the user's name and a role-based badge
                         <div className="user-nav-container">
+                            <NotificationBell />
                             <div className="user-profile-info">
                                 <span className="user-greeting">Hi, {user?.name}</span>
                                 <span className={`role-tag ${user?.role}`}>
