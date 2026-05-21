@@ -9,10 +9,9 @@ interface Feature {
 const features: Feature[] = [
     { title: "Resource Hub", route: "/resources" },
     { title: "Mentorship Q&A", route: "/mentorship" },
-    { title: "Events & Workshops", route: "/events" },
-    { title: "Society Hub", route: "/societies" },
-    { title: "Career Guidance", route: "/career" },
-    { title: "Community", route: "/societies" },
+    { title: "Events & Workshops", route: "/campus-hub" },
+    { title: "Verified Resources", route: "/resources" },
+    { title: "Career Roadmaps", route: "/career" },
 ];
 
 const Features = () => {

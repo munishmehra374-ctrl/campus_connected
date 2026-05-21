@@ -650,6 +650,39 @@
   line-height: 1.45;
 }
 
+.auth-senior-success {
+  text-align: center;
+  padding: 36px 32px;
+  max-width: 440px;
+}
+
+.auth-success-icon-lg {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.15);
+  color: #6ee7b7;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.auth-senior-success-msg {
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  margin: 0 0 12px;
+}
+
+.auth-senior-success-hint {
+  color: #94a3b8;
+  font-size: 0.88rem;
+  margin: 0 0 24px;
+}
+
 @media (max-width: 520px) {
   .auth-form-row-2 {
     grid-template-columns: 1fr;

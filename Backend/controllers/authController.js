@@ -30,11 +30,37 @@ exports.register = async (req, res) => {
             github,
         } = req.body;
 
-        const existingUser = await User.findOne({ email });
+        const normalizedEmail = String(email || "").trim().toLowerCase();
+        if (!normalizedEmail) {
+            return res.status(400).json({ message: "Valid email is required" });
+        }
+
+        const existingUser = await User.findOne({ email: normalizedEmail });
         if (existingUser) return res.status(400).json({ message: "User already exists" });
 
+        const normalizedRole = String(role || "").toLowerCase();
+        const normalizedAccountType = String(accountType || "").toLowerCase();
+
+        if (
+            normalizedRole === "admin" ||
+            normalizedAccountType === "admin" ||
+            normalizedRole === "senior"
+        ) {
+            return res.status(403).json({
+                message: "Admin accounts cannot be created through public registration.",
+            });
+        }
+
+        if (
+            normalizedAccountType &&
+            normalizedAccountType !== "junior" &&
+            normalizedAccountType !== "senior_applicant"
+        ) {
+            return res.status(400).json({ message: "Invalid account type for registration." });
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
-        const isSeniorApplicant = accountType === "senior_applicant" || role === "senior_applicant";
+        const isSeniorApplicant = normalizedAccountType === "senior_applicant";
 
         if (isSeniorApplicant) {
             const studyYear = Number(currentYear ?? year);
@@ -52,7 +78,7 @@ exports.register = async (req, res) => {
 
             const user = await User.create({
                 name,
-                email,
+                email: normalizedEmail,
                 password: hashedPassword,
                 role: "junior",
                 appliedRole: "senior",
@@ -76,16 +102,15 @@ exports.register = async (req, res) => {
             });
         }
 
-        const backendRole = role === "admin" ? "admin" : "junior";
         const user = await User.create({
             name,
-            email,
+            email: normalizedEmail,
             password: hashedPassword,
-            role: backendRole,
-            year: backendRole === "admin" ? null : Number(year) || 1,
+            role: "junior",
+            year: Number(year ?? currentYear) || 1,
             verificationStatus: "none",
             appliedRole: "none",
-            mentorVerified: backendRole === "admin",
+            mentorVerified: false,
         });
 
         setAuthCookie(res, user._id);
@@ -103,7 +128,12 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const user = await User.findOne({ email });
+        const normalizedEmail = String(email || "").trim().toLowerCase();
+        if (!normalizedEmail) {
+            return res.status(400).json({ message: "Email is required" });
+        }
+
+        const user = await User.findOne({ email: normalizedEmail });
         if (!user) return res.status(404).json({ message: "User not found" });
 
         const isMatch = await bcrypt.compare(password, user.password);

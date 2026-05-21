@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth, isPendingMentorApplicant } from "../../context/AuthContext";
 import ResourcesHero from "./components/ResourcesHero";
 import ResourcesFilters from "./components/ResourcesFilters";
 import ResourceGrid from "./components/ResourceGrid";
@@ -21,7 +21,10 @@ const ResourcesPage = () => {
     if (loading) return <div className="resources-page loading-state">Loading resources...</div>;
 
     const currentRole = user?.role?.toLowerCase().trim() || "guest";
-    const canUpload = currentRole === "junior" || currentRole === "senior" || currentRole === "admin";
+    const pendingMentor = isPendingMentorApplicant(user);
+    const canUpload =
+        !pendingMentor &&
+        (currentRole === "junior" || currentRole === "senior" || currentRole === "admin");
 
     return (
         <div className="resources-page">

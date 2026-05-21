@@ -15,6 +15,7 @@ const FEATURES = ["Mentorship", "Resources", "Events", "Communities"];
 
 const LoginPage: React.FC = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const { setIsAuth, setUser } = useAuth();
 
     const [formData, setFormData] = useState<LoginData>({

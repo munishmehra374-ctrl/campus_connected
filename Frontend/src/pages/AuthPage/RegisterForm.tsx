@@ -6,7 +6,7 @@ import api from "../../api";
 import { useAuth } from "../../context/AuthContext";
 import logo from "../../assets/logo.png";
 
-type AccountType = "junior" | "senior_applicant" | "admin";
+type AccountType = "junior" | "senior_applicant";
 
 const RegisterPage: React.FC = () => {
     const navigate = useNavigate();
@@ -26,6 +26,7 @@ const RegisterPage: React.FC = () => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
+    const [showSeniorSuccess, setShowSeniorSuccess] = useState(false);
 
     const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -61,13 +62,9 @@ const RegisterPage: React.FC = () => {
                 accountType,
             };
 
-            if (accountType === "admin") {
-                payload.role = "admin";
-            } else if (accountType === "junior") {
-                payload.role = "junior";
+            if (accountType === "junior") {
                 payload.year = currentYear;
             } else {
-                payload.role = "senior_applicant";
                 payload.currentYear = currentYear;
                 payload.admissionYear = admissionYear;
                 payload.branch = branch.trim();
@@ -84,10 +81,15 @@ const RegisterPage: React.FC = () => {
                     ? "Your mentor application is under review. You currently have junior access until verification is completed."
                     : "Account created successfully.");
 
-            if (accountType === "senior_applicant" && res.data.user) {
-                setIsAuth(true);
-                setUser(res.data.user);
-                navigate("/home", { state: { mentorPendingMessage: msg } });
+            if (accountType === "senior_applicant") {
+                try {
+                    await api.post("/api/auth/logout");
+                } catch {
+                    /* clear session cookie if backend set one during register */
+                }
+                setIsAuth(false);
+                setUser(null);
+                setShowSeniorSuccess(true);
                 return;
             }
 
@@ -156,6 +158,28 @@ const RegisterPage: React.FC = () => {
                 </section>
 
                 <section className="auth-panel auth-fade-in auth-fade-in--delay">
+                    {showSeniorSuccess ? (
+                        <div className="auth-glass-card auth-card--register auth-senior-success">
+                            <div className="auth-success-icon-lg">✓</div>
+                            <h2 className="auth-card-title">Signup successful!</h2>
+                            <p className="auth-senior-success-msg">
+                                Your mentor application has been submitted successfully.
+                            </p>
+                            <p className="auth-senior-success-msg">
+                                You currently have junior access until admin verification is completed.
+                            </p>
+                            <p className="auth-senior-success-hint">
+                                You can now login using your credentials.
+                            </p>
+                            <button
+                                type="button"
+                                className="login-btn auth-submit"
+                                onClick={() => navigate("/login")}
+                            >
+                                Go to Login
+                            </button>
+                        </div>
+                    ) : (
                     <form
                         className={`auth-glass-card auth-card--register auth-form ${isSeniorApplicant ? "auth-form--verify" : ""}`}
                         onSubmit={handleRegister}
@@ -184,25 +208,22 @@ const RegisterPage: React.FC = () => {
                             >
                                 <option value="junior">Junior Student</option>
                                 <option value="senior_applicant">Senior Applicant (Mentor)</option>
-                                <option value="admin">Faculty (Admin)</option>
                             </select>
                         </div>
 
-                        {accountType !== "admin" && (
-                            <div className="form-group">
-                                <label htmlFor="register-current-year">Current year</label>
-                                <select
-                                    id="register-current-year"
-                                    value={currentYear}
-                                    onChange={(e) => setCurrentYear(Number(e.target.value))}
-                                >
-                                    <option value={1}>1st Year</option>
-                                    <option value={2}>2nd Year</option>
-                                    <option value={3}>3rd Year</option>
-                                    <option value={4}>4th Year</option>
-                                </select>
-                            </div>
-                        )}
+                        <div className="form-group">
+                            <label htmlFor="register-current-year">Current year</label>
+                            <select
+                                id="register-current-year"
+                                value={currentYear}
+                                onChange={(e) => setCurrentYear(Number(e.target.value))}
+                            >
+                                <option value={1}>1st Year</option>
+                                <option value={2}>2nd Year</option>
+                                <option value={3}>3rd Year</option>
+                                <option value={4}>4th Year</option>
+                            </select>
+                        </div>
 
                         {isSeniorApplicant && (
                             <div className="auth-verification-block">
@@ -301,6 +322,7 @@ const RegisterPage: React.FC = () => {
                             </button>
                         </p>
                     </form>
+                    )}
                 </section>
             </div>
 

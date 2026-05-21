@@ -22,7 +22,7 @@ const MentorStatusBanner = () => {
     if (user.verificationStatus === "pending_verification" || user.isSeniorApplicant) {
         return (
             <div className="mentor-status-banner mentor-status-banner--pending">
-                <span className="mentor-status-pill">Pending Verification</span>
+                <span className="mentor-status-pill">Pending Mentor Verification</span>
                 <p>
                     Your mentor application is under review. You currently have junior access until
                     verification is completed.

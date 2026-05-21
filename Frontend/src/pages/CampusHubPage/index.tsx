@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth, isVerifiedSeniorUser } from "../../context/AuthContext";
 import { fetchEvents } from "../../api";
 import HubEventCard from "./components/HubEventCard";
 import CreateEventModal from "./components/CreateEventModal";
@@ -138,7 +138,7 @@ const CampusHubPage = () => {
         setEvents((prev) => prev.filter((e) => e._id !== id));
     };
 
-    const canCreateEvent = user?.role === "senior" || user?.role === "admin";
+    const canCreateEvent = isVerifiedSeniorUser(user);
 
     const cardProps = {
         role: user?.role,

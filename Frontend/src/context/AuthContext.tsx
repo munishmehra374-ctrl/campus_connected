@@ -61,6 +61,13 @@ export const useAuth = () => {
     return context;
 };
 
+export function isPendingMentorApplicant(user: AuthUser | null): boolean {
+    if (!user) return false;
+    return (
+        user.verificationStatus === "pending_verification" || Boolean(user.isSeniorApplicant)
+    );
+}
+
 export function isVerifiedSeniorUser(user: AuthUser | null): boolean {
     if (!user) return false;
     if (user.role === "admin") return true;

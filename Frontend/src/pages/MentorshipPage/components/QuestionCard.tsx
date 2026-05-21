@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 
-import { useAuth } from "../../../context/AuthContext";
+import { useAuth, isVerifiedSeniorUser } from "../../../context/AuthContext";
 
 import api, { fetchQuestionById, markQuestionSolved, reopenQuestion, hideQuestionFromFeed } from "../../../api";
 
@@ -41,6 +41,7 @@ const QuestionCard = ({ question, onUpdate, onHide, pollActive = false }: Questi
 
 
     const userRole = user?.role?.toLowerCase() || "";
+    const canAnswerAsSenior = isVerifiedSeniorUser(user) || userRole === "admin";
 
     const isAuthor = String(user?._id) === String(localQuestion.author?.id);
 
@@ -526,7 +527,7 @@ const QuestionCard = ({ question, onUpdate, onHide, pollActive = false }: Questi
 
 
 
-                    {(userRole === "senior" || userRole === "admin") &&
+                    {canAnswerAsSenior &&
                         (local.status === "Unsolved" || local.status === "Pending") &&
                         !seniorAlreadyPublic && (
 
@@ -548,7 +549,7 @@ const QuestionCard = ({ question, onUpdate, onHide, pollActive = false }: Questi
 
 
 
-                    {(userRole === "senior" || userRole === "admin") && seniorAlreadyPublic && (
+                    {canAnswerAsSenior && seniorAlreadyPublic && (
 
                         <span className="action-hint">You already shared a public answer on this question</span>
 
