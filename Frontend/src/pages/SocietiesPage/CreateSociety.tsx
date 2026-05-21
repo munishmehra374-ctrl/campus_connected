@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api"; // Path to your axios instance
-import "./create.css";
+import "./Create.css";
 
 const CreateSociety = () => {
     const navigate = useNavigate();
