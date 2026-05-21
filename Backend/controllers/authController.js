@@ -3,13 +3,20 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { serializeUserForClient } = require("../utils/userSerialization");
 
+function getAuthCookieOptions() {
+    const isProduction = process.env.NODE_ENV === "production";
+    return {
+        httpOnly: true,
+        secure: isProduction,
+        /* Cross-origin SPA (Vercel → Render) requires SameSite=None + Secure */
+        sameSite: isProduction ? "none" : "lax",
+        path: "/",
+    };
+}
+
 function setAuthCookie(res, userId) {
     const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: "1d" });
-    res.cookie("token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-    });
+    res.cookie("token", token, getAuthCookieOptions());
 }
 
 exports.register = async (req, res) => {
@@ -157,7 +164,7 @@ exports.login = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
-    res.clearCookie("token");
+    res.clearCookie("token", getAuthCookieOptions());
     res.json({ message: "Logged out" });
 };
 
