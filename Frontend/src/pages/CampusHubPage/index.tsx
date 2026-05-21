@@ -74,11 +74,6 @@ const CampusHubPage = () => {
         [pendingEvents, user?.role]
     );
 
-    const upcomingEvents = useMemo(
-        () => approvedEvents.filter(isEventUpcoming),
-        [approvedEvents]
-    );
-
     const openRegistration = useMemo(() => approvedEvents.filter(isJoinable), [approvedEvents]);
 
     const trendingEvents = useMemo(

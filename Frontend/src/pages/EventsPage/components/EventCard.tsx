@@ -12,6 +12,7 @@ import {
     X,
 } from "lucide-react";
 import type { EventItem } from "../data";
+import { useAuth } from "../../../context/AuthContext";
 import {
     registerForEvent,
     toggleEventBookmark,
@@ -32,6 +33,7 @@ interface Props {
 }
 
 const EventCard = ({ event, role, onUpdate, onHide, compact = false }: Props) => {
+    const { user } = useAuth();
     const [loading, setLoading] = useState(false);
     const [showComments, setShowComments] = useState(false);
     const [comment, setComment] = useState("");
@@ -48,8 +50,12 @@ const EventCard = ({ event, role, onUpdate, onHide, compact = false }: Props) =>
         setLoading(true);
         setError("");
         try {
-            const res = await registerForEvent(event._id);
-            refresh(res.data);
+            const res = await registerForEvent(event._id, {
+                fullName: user?.name?.trim() || "Student",
+                userEmail: user?.email?.trim() || "",
+                note: "Event registration",
+            });
+            refresh(res.data.event || res.data);
         } catch (err: unknown) {
             const msg =
                 err && typeof err === "object" && "response" in err

@@ -65,11 +65,7 @@ const SocietiesPage = () => {
                             <span className="count-badge">{societies.length} Found</span>
                         </div>
 
-                        <SocietyList
-                            societies={societies}
-                            userRole={user?.role}
-                            isSeniorAssigned={isSeniorAssigned}
-                        />
+                        <SocietyList societies={societies} />
                     </>
                 )}
             </div>

@@ -36,7 +36,6 @@ const HubEventCard = ({ event, role, userId, onUpdate, onDelete, featured }: Pro
     const isRejected = event.approvalStatus === "Rejected";
     const joinable = isJoinable(event);
     const trending = isTrendingEvent(event);
-    const pendingApps = event.pendingCount ?? 0;
 
     const handleBookmark = async () => {
         setBookmarking(true);

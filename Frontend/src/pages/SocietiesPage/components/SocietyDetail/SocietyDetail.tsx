@@ -61,9 +61,6 @@ const SocietyDetail = () => {
     const isSenior = user?.role === "senior";
     const isJunior = user?.role === "junior";
 
-    // Check if the current user is the actual assigned lead
-    const isAssignedLead = isSenior && society.leadId?._id === user?._id;
-
     // Logic: Admins and Seniors can manage workshops
     const canManageWorkshops = isAdmin || isSenior;
 
